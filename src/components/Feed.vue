@@ -2,32 +2,37 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({
-  userEmail: String
+  userID: String
 })
 
 const posts = ref([
   {
     author: 'bubster100@gmail.com',
+    id: '1',
     timestamp: '2025-07-09T11:38:00',
     content: 'hi im bubster'
   },
   {
     author: 'superguy@gmail.com',
+    id: '2',
     timestamp: '2025-06-09T09:40:23',
     content: 'did u guys watch new movie?'
   },
   {
     author: 'pilatesprincess@gmail.com',
+    id: '3',
     timestamp: '2025-06-11T04:30:43',
     content: 'Lets do pilates!'
   },
   {
     author: 'hectagon@ucr.edu',
+    id: '4',
     timestamp: '2025-06-16T05:20:18',
     content: 'im a shape'
   },
   {
     author: 'spook@yahoo.com',
+    id: '5',
     timestamp: '2025-07-03T08:22:02',
     content: 'spook'
   }
@@ -35,8 +40,8 @@ const posts = ref([
 
 
 const filteredPosts = computed(() => {
-  return props.userEmail
-    ? posts.value.filter(post => post.author === props.userEmail)
+  return props.userID
+    ? posts.value.filter(post => post.id === props.userID)
     : posts.value
 })
 

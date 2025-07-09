@@ -10,7 +10,7 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/users/:email',
+      path: '/users/:id',
       name: 'userFeed',
       component: HomeView,
     },

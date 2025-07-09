@@ -5,23 +5,28 @@ import Feed from '@/components/Feed.vue';
 import FollowSuggestion from '@/components/FollowSuggestion.vue';
 import { useRoute } from 'vue-router';
 import { ref, watch } from 'vue';
+import CreatePost from '@/components/CreatePost.vue';
 
 const route = useRoute()
-const userEmail = ref(decodeURIComponent(route.params.email || ''))
+const userID = ref(route.params.id || '')
 watch(
-  () => route.params.email,
-  (newEmail) => {
-    userEmail.value = decodeURIComponent(newEmail)
+  () => route.params.id,
+  (newID) => {
+    userID.value = newID
   } 
 )
-
 </script>
 
 <template>
   <main>
     <UserStats />
-    <Feed :userEmail = "userEmail"/>
+    <div class="middle">
+      <Feed :userID = "userID"/>
+    <CreatePost />
+    </div>
+    
     <FollowSuggestion />
+    
   </main>
 </template>
 
@@ -29,5 +34,10 @@ watch(
 main {
   display: flex;
   justify-content: space-evenly;
+  margin-top: 40px;
+}
+.middle {
+  display: flex;
+  flex-direction: column;
 }
 </style>

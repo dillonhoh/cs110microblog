@@ -5,10 +5,6 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header>
-
-    
-      <!-- <HelloWorld msg="You did it!" /> -->
-
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/login" class="right-link">Log In</RouterLink>

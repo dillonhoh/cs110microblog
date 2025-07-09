@@ -9,8 +9,12 @@ const suggestedEmails = [
   {email: 'pilatesprincess@gmail.com',
     id: '3'
   },
-  'hectagon@ucr.edu',
-  'spook@yahoo.com'
+  {email: 'hectagon@ucr.edu',
+    id: '4'
+  },
+  {email: 'spook@yahoo.com',
+    id: '5'
+  }
 ]
 </script>
 
@@ -19,8 +23,8 @@ const suggestedEmails = [
     <h1 class="suggestion-title">Suggested Following</h1>
     <p v-if="true">
         <ul>
-      <li v-for="email in suggestedEmails" :key="email">
-        <router-link :to="`/users/${encodeURIComponent(email)}`">@{{ email }}</router-link>
+      <li v-for="email in suggestedEmails" :key="email.id">
+        <router-link :to="`/users/${email.id}`">@{{ email.email }}</router-link>
       </li>
     </ul>
     </p>
@@ -42,5 +46,6 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: fit-content;
 }
 </style>
