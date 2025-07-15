@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', {
 
     following: 2,
     followers: 0,
-    posts: 3
+    posts: 3,
   }),
   actions: {
     toggleMode(modeInput) {
@@ -25,15 +25,14 @@ export const useUserStore = defineStore('user', {
     },
 
     incrementFollowing() {
-        this.following += 1
+      this.following += 1
     },
     incrementFollowers() {
-        this.followers += 1
-    }
+      this.followers += 1
+    },
   },
   getters: {
     isLogin: (state) => state.mode === 'login',
-    isViewingAnotherUser: (state) => state.viewingUser !== ''
-  }
-    
+    isViewingAnotherUser: (state) => state.viewingUser !== '',
+  },
 })
