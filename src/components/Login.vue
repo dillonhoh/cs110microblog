@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc } from 'firebase/firestore'
 
 import { auth } from '../firebaseResources'
 import { firestore } from '../firebaseResources'
@@ -28,14 +28,33 @@ const createUserInFirestore = async (user) => {
     following: [],
   })
 }
+const getFollowerCount = async (uid) => {
+  try {
+    const userRef = doc(firestore, 'users', uid)
+    const snapshot = await getDoc(userRef)
+
+    if (snapshot.exists()) {
+      const data = snapshot.data()
+      const followers = data.followers || []
+      console.log(followers.length)
+      return followers.length
+    }
+  } catch (error) {
+    console.error("Failed to get follower count:", error)
+    return 0
+  }
+}
 
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed up
         const user = userCredential.user
-        store.login(user.email)
+        store.login(user.email, user.uid) 
+
+        const followerC = await getFollowerCount(user.uid)
+        store.followerCount = followerC
       })
       .catch((error) => {
         switch (error.code) {
@@ -61,8 +80,11 @@ const handleSubmit = () => {
       .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user
-        store.login(user.email)
+        store.login(user.email, user.uid)
         await createUserInFirestore(user) 
+
+        const followerC = await getFollowerCount(user.uid)
+        store.followerCount = followerC
       })
       .catch((error) => {
         switch (error.code) {
@@ -83,6 +105,8 @@ const handleSubmit = () => {
   }
   clearForm()
 }
+
+
 </script>
 
 <template>

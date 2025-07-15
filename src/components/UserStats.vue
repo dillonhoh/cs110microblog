@@ -1,6 +1,8 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 const store = useUserStore()
+
+
 </script>
 <template>
   <div class="user-stats">
@@ -13,15 +15,15 @@ const store = useUserStore()
     <div class="profile-stats">
       <div class="stat">
         <div>Posts</div>
-        <div class="stat-number">{{ store.posts }}</div>
+        <div class="stat-number">{{ store.postsCount }}</div>
       </div>
       <div class="stat">
         <div>Following</div>
-        <div class="stat-number">{{ store.following }}</div>
+        <div class="stat-number">{{ store.followingCount }}</div>
       </div>
       <div class="stat">
         <div>Followers</div>
-        <div class="stat-number">{{ store.followers }}</div>
+        <div class="stat-number">{{ store.followerCount }}</div>
       </div>
     </div>
   </div>
