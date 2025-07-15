@@ -1,8 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+
 import { auth } from '../firebaseResources'
+import { firestore } from '../firebaseResources'
 
 const store = useUserStore()
 
@@ -15,6 +19,16 @@ const clearForm = () => {
   emailForm.value = ''
   password.value = ''
 }
+
+const createUserInFirestore = async (user) => {
+  const userRef = doc(firestore, 'users', user.uid)
+  await setDoc(userRef, {
+    email: user.email,
+    followers: [],
+    following: [],
+  })
+}
+
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
@@ -44,10 +58,11 @@ const handleSubmit = () => {
       })
   } else {
     createUserWithEmailAndPassword(auth, emailForm.value, password.value)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user
         store.login(user.email)
+        await createUserInFirestore(user) 
       })
       .catch((error) => {
         switch (error.code) {
@@ -61,7 +76,7 @@ const handleSubmit = () => {
             errorMessage.value = 'Password is too weak.'
             break
           default:
-            errorMessage.value = 'Unhandled Firebase auth error:'
+            errorMessage.value = 'Unhandled Firebase auth error'
         }
         clearForm()
       })
