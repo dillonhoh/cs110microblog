@@ -133,4 +133,10 @@ form button {
 h1 {
   font-size: 14px;
 }
+.error {
+  font-weight: 400;
+  color: lightcoral;
+  margin-bottom: 15px;
+
+}
 </style>
