@@ -35,11 +35,12 @@ const getSuggestedEmails = async (currentUid) => {
 <template>
   <div class="suggestion-container">
     <h1 class="suggestion-title">Suggested Following</h1>
-    <section v-if="true">
+    <section v-if="suggestedEmails.length > 0">
       <ul>
         <li v-for="user in suggestedEmails" :key="user.uid">
           <router-link :to="`/users/${user.uid}`">{{ user.email }}</router-link>
         </li>
+        <button @click="followUser(user.uid)">Follow</button>
       </ul>
     </section>
     <p v-else>Nobody to Follow, Check Back Later</p>

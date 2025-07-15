@@ -25,9 +25,10 @@ const createUserInFirestore = async (user) => {
   await setDoc(userRef, { // actually modifying/creating the database
     email: user.email,
     followers: [],
-    following: [],
+    following: []
   })
 }
+
 const getFollowerCount = async (uid) => {
   try {
     const userRef = doc(firestore, 'users', uid)
@@ -58,23 +59,7 @@ const getFollowingCount = async (uid) => {
     return 0
   }
 }
-const getSuggestedEmails = async (currentUid) => {
-  const usersCol = collection(firestore, 'users')
-  const snapshot = await getDocs(usersCol)
 
-  const suggestions = []
-
-  snapshot.forEach(doc => {
-    const data = doc.data()
-    if (doc.id !== currentUid) { // to exclude the current user from the list
-      suggestions.push({
-        uid: doc.id,
-        email: data.email,
-      })
-    }
-  })
-  return suggestions
-}
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)

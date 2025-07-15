@@ -1,11 +1,31 @@
 <script setup>
+
 import { ref } from 'vue'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+
+import { firestore } from '../firebaseResources'
+import { useUserStore } from '../stores/user'
+
+const store = useUserStore()
+
 const content = ref('')
-const handleSubmit = () => {
+
+const createPost = async (contentText) => {
+  const userId = store.currentUserId
+  const postsCollection = collection(firestore, 'users', userId, 'posts')
+
+  await addDoc(postsCollection, {
+    content: contentText,
+    createdAt: serverTimestamp()
+  })
+}
+
+const handleSubmit = async () => {
   if (!content.value.trim()) {
     alert(`Post must not be empty!`)
     return
   }
+  await createPost(content.value)
   content.value = ''
 }
 </script>
