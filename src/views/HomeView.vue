@@ -1,11 +1,11 @@
 <script setup>
-import UserStats from '@/components/UserStats.vue';
+import UserStats from '@/components/UserStats.vue'
 import TheWelcome from '../components/TheWelcome.vue'
-import Feed from '@/components/Feed.vue';
-import FollowSuggestion from '@/components/FollowSuggestion.vue';
-import { useRoute } from 'vue-router';
-import { ref, watch } from 'vue';
-import CreatePost from '@/components/CreatePost.vue';
+import Feed from '@/components/Feed.vue'
+import FollowSuggestion from '@/components/FollowSuggestion.vue'
+import { useRoute } from 'vue-router'
+import { ref, watch } from 'vue'
+import CreatePost from '@/components/CreatePost.vue'
 
 const route = useRoute()
 const userID = ref(route.params.id || '')
@@ -13,7 +13,7 @@ watch(
   () => route.params.id,
   (newID) => {
     userID.value = newID
-  } 
+  },
 )
 </script>
 
@@ -21,12 +21,11 @@ watch(
   <main>
     <UserStats />
     <div class="middle">
-      <Feed :userID = "userID"/>
-    <CreatePost />
+      <Feed :userID="userID" />
+      <CreatePost />
     </div>
-    
+
     <FollowSuggestion />
-    
   </main>
 </template>
 

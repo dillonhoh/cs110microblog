@@ -1,22 +1,19 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
   <header>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/login" class="right-link">Log In</RouterLink>
-      </nav>
-    
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/login" class="right-link">Log In</RouterLink>
+    </nav>
   </header>
 
   <RouterView />
 </template>
 
 <style scoped>
-
 nav {
   width: 100%;
   font-size: 18px;
@@ -28,15 +25,11 @@ nav a.router-link-exact-active {
   color: var(--color-text);
 }
 
-
 nav a {
   display: inline-block;
   padding: 0 1rem;
 }
 nav .right-link {
   border-left: 1px solid var(--color-border);
-
 }
-
-
 </style>
