@@ -4,10 +4,10 @@ const store = useUserStore()
 </script>
 <template>
   <div class="user-stats">
-    <h1 v-if="store.isViewingAnotherUser" class="user-email">
+    <h1 v-if="store.isViewingAnotherUser" class="user-email-stats">
       {{ store.viewingUser }}
     </h1>
-    <h1 v-else class="user-email">
+    <h1 v-else class="user-email-stats">
       {{ store.currentUser }}
     </h1>
     <div class="profile-stats">
@@ -33,7 +33,7 @@ const store = useUserStore()
   padding: 15px 0px 15px 0px;
   height: 100px;
 }
-.user-email {
+.user-email-stats {
   font-size: 20px;
   margin-left: 22px;
   font-weight: bold;

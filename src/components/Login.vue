@@ -21,7 +21,7 @@ const handleSubmit = () => {
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user
-        store.login(emailForm.value)
+        store.login(user.email)
       })
       .catch((error) => {
         switch (error.code) {
@@ -47,7 +47,7 @@ const handleSubmit = () => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user
-        store.login(emailForm.value)
+        store.login(user.email)
       })
       .catch((error) => {
         switch (error.code) {
@@ -73,13 +73,14 @@ const handleSubmit = () => {
 <template>
   <div class="form-container">
     <form>
-      <div class="option">
-        <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')">Log In</a>
-        <a :class="{ active: !store.isLogin }" @click.prevent="store.toggleMode('signup')"
-          >Sign Up</a
-        >
-      </div>
-
+       <template v-if="!store.isLoggedIn">
+        <div class="option">
+          <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')">Log In</a>
+          <a :class="{ active: !store.isLogin }" @click.prevent="store.toggleMode('signup')"
+            >Sign Up</a
+          >
+        </div>
+      </template>
       <template v-if="!store.isLoggedIn">
         <input type="text" v-model="emailForm" placeholder="Email" />
         <input type="password" v-model="password" placeholder="Password" />
@@ -88,7 +89,7 @@ const handleSubmit = () => {
         </button>
       </template>
       <template v-else>
-        <h1>{{ store.currentUser }}</h1>
+        <h1 class="user-email">{{ store.currentUser }}</h1>
         <button type="button" @click="store.logout">Log Out</button>
       </template>
       <template v-if="errorMessage">
@@ -137,6 +138,12 @@ h1 {
   font-weight: 400;
   color: lightcoral;
   margin-bottom: 15px;
-
+}
+.user-email{
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 18px;
 }
 </style>
