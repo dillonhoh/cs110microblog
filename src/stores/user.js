@@ -8,9 +8,9 @@ export const useUserStore = defineStore('user', {
     isLoggedIn: false,
     mode: 'login',
 
-    followingCount: 0,
-    followerCount: 0,
-    postsCount: 0,
+    followingCount: 1,
+    followerCount: 1,
+    postsCount: 1,
   }),
   actions: {
     toggleMode(modeInput) {

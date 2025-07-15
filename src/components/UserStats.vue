@@ -12,7 +12,8 @@ const store = useUserStore()
     <h1 v-else class="user-email-stats">
       {{ store.currentUser }}
     </h1>
-    <div class="profile-stats">
+    <template v-if="store.isLoggedIn">
+<div class="profile-stats">
       <div class="stat">
         <div>Posts</div>
         <div class="stat-number">{{ store.postsCount }}</div>
@@ -26,6 +27,11 @@ const store = useUserStore()
         <div class="stat-number">{{ store.followerCount }}</div>
       </div>
     </div>
+    </template>
+    <template v-else>
+      <h1>Log in to see Stats</h1>
+    </template>
+    
   </div>
 </template>
 <style>

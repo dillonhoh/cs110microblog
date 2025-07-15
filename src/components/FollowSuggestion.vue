@@ -1,11 +1,35 @@
 <script setup>
-const suggestedEmails = [
-  { email: 'bubster100@gmail.com', id: '1' },
-  { email: 'superguy@gmail.com', id: '2' },
-  { email: 'pilatesprincess@gmail.com', id: '3' },
-  { email: 'hectagon@ucr.edu', id: '4' },
-  { email: 'spook@yahoo.com', id: '5' },
-]
+import { ref, onMounted } from 'vue'
+import { collection, getDocs } from 'firebase/firestore'
+import { firestore } from '../firebaseResources'
+import { useUserStore } from '../stores/user'
+
+const suggestedEmails = ref([])
+const store = useUserStore()
+
+onMounted(async () => {
+  if (store.currentUserId) {
+    suggestedEmails.value = await getSuggestedEmails(store.currentUserId)
+  }
+})
+const getSuggestedEmails = async (currentUid) => {
+  const usersCol = collection(firestore, 'users')
+  const snapshot = await getDocs(usersCol)
+
+  const suggestions = []
+
+  snapshot.forEach(doc => {
+    const data = doc.data()
+    if (doc.id !== currentUid) { // to exclude the current user from the list
+      suggestions.push({
+        uid: doc.id,
+        email: data.email,
+      })
+    }
+  })
+  return suggestions
+}
+
 </script>
 
 <template>
@@ -13,8 +37,8 @@ const suggestedEmails = [
     <h1 class="suggestion-title">Suggested Following</h1>
     <section v-if="true">
       <ul>
-        <li v-for="email in suggestedEmails" :key="email.id">
-          <router-link :to="`/users/${email.id}`">{{ email.email }}</router-link>
+        <li v-for="user in suggestedEmails" :key="user.uid">
+          <router-link :to="`/users/${user.uid}`">{{ user.email }}</router-link>
         </li>
       </ul>
     </section>

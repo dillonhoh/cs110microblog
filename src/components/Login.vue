@@ -21,8 +21,8 @@ const clearForm = () => {
 }
 
 const createUserInFirestore = async (user) => {
-  const userRef = doc(firestore, 'users', user.uid)
-  await setDoc(userRef, {
+  const userRef = doc(firestore, 'users', user.uid) // exists as a pointer/reference to the document
+  await setDoc(userRef, { // actually modifying/creating the database
     email: user.email,
     followers: [],
     following: [],
@@ -36,7 +36,6 @@ const getFollowerCount = async (uid) => {
     if (snapshot.exists()) {
       const data = snapshot.data()
       const followers = data.followers || []
-      console.log(followers.length)
       return followers.length
     }
   } catch (error) {
@@ -44,7 +43,38 @@ const getFollowerCount = async (uid) => {
     return 0
   }
 }
+const getFollowingCount = async (uid) => {
+  try {
+    const userRef = doc(firestore, 'users', uid)
+    const snapshot = await getDoc(userRef)
 
+    if (snapshot.exists()) {
+      const data = snapshot.data()
+      const following = data.following || []
+      return following.length
+    }
+  } catch (error) {
+    console.error("Failed to get following count:", error)
+    return 0
+  }
+}
+const getSuggestedEmails = async (currentUid) => {
+  const usersCol = collection(firestore, 'users')
+  const snapshot = await getDocs(usersCol)
+
+  const suggestions = []
+
+  snapshot.forEach(doc => {
+    const data = doc.data()
+    if (doc.id !== currentUid) { // to exclude the current user from the list
+      suggestions.push({
+        uid: doc.id,
+        email: data.email,
+      })
+    }
+  })
+  return suggestions
+}
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
@@ -55,6 +85,9 @@ const handleSubmit = () => {
 
         const followerC = await getFollowerCount(user.uid)
         store.followerCount = followerC
+        const followingC = await getFollowingCount(user.uid)
+        store.followingCount = followingC
+
       })
       .catch((error) => {
         switch (error.code) {
@@ -85,6 +118,9 @@ const handleSubmit = () => {
 
         const followerC = await getFollowerCount(user.uid)
         store.followerCount = followerC
+        const followingC = await getFollowingCount(user.uid)
+        store.followingCount = followingC
+     
       })
       .catch((error) => {
         switch (error.code) {
