@@ -8,7 +8,6 @@ const handleSubmit = () => {
 
   }
     content.value = ''
-//   postStore.addPost(userStore.currentUser, content.value)
   
 }
 </script>

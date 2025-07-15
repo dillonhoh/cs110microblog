@@ -21,13 +21,13 @@ const suggestedEmails = [
 <template>
     <div class ="suggestion-container">
     <h1 class="suggestion-title">Suggested Following</h1>
-    <p v-if="true">
+    <section v-if="true">
         <ul>
       <li v-for="email in suggestedEmails" :key="email.id">
-        <router-link :to="`/users/${email.id}`">@{{ email.email }}</router-link>
+        <router-link :to="`/users/${email.id}`">{{ email.email }}</router-link>
       </li>
     </ul>
-    </p>
+  </section>
     <p v-else>Nobody to Follow, Check Back Later</p>
     </div>
 </template>
