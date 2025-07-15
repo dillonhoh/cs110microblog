@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseResources";
+
+
 
 const store = useUserStore()
 
@@ -16,8 +20,31 @@ const handleSubmit = () => {
     alert(`Password must be at least 6 characters long`)
     return
   }
-
-  store.login(emailForm.value)
+    if(store.isLogin){
+  signInWithEmailAndPassword(auth, emailForm.value, password.value)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
+  }
+  else{
+    createUserWithEmailAndPassword(auth, emailForm.value, password.value)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+  }
   emailForm.value = ''
   password.value = ''
 }

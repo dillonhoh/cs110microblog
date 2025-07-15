@@ -4,7 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-	// Replace this with the firebase config for your app
+    apiKey: "AIzaSyCPpJtSgI0fmhzGewyqV0HSKykUxe7mzKw",
+  authDomain: "first-firebase2025-e7cd0.firebaseapp.com",
+  projectId: "first-firebase2025-e7cd0",
+  storageBucket: "first-firebase2025-e7cd0.firebasestorage.app",
+  messagingSenderId: "148765976691",
+  appId: "1:148765976691:web:a6c56046e9b9e883b82206"
 };
 
 // Initialize Firebase
