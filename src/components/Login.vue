@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore'
 
 import { auth } from '../firebaseResources'
 import { firestore } from '../firebaseResources'
@@ -60,6 +60,17 @@ const getFollowingCount = async (uid) => {
     return 0
   }
 }
+const getPostCount = async (uid) => {
+  try {
+    const postRef = collection(firestore, 'users', uid, 'posts')
+    const snapshot = await getDocs(postRef)
+
+    return snapshot.size
+  } catch (error) {
+    console.error("Failed to get posts count:", error)
+    return 0
+  }
+}
 
 const handleSubmit = () => {
   if (store.isLogin) {
@@ -73,7 +84,8 @@ const handleSubmit = () => {
         store.followerCount = followerC
         const followingC = await getFollowingCount(user.uid)
         store.followingCount = followingC
-
+        const postsC = await getPostCount(user.uid)
+        store.postsCount = postsC
       })
       .catch((error) => {
         switch (error.code) {
@@ -106,6 +118,8 @@ const handleSubmit = () => {
         store.followerCount = followerC
         const followingC = await getFollowingCount(user.uid)
         store.followingCount = followingC
+        const postsC = await getPostCount(user.uid)
+        store.postsCount = postsC
      
       })
       .catch((error) => {
