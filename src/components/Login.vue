@@ -8,6 +8,8 @@ import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore'
 import { auth } from '../firebaseResources'
 import { firestore } from '../firebaseResources'
 
+import { getFollowerCount, getFollowingCount, getPostCount } from '../utils/helpers'
+
 const store = useUserStore()
 
 const emailForm = ref('')
@@ -38,6 +40,9 @@ const handleSubmit = () => {
         const user = userCredential.user
         store.login(user.email, user.uid)
 
+        store.followerCount = await getFollowerCount(user.uid)
+        store.followingCount = await getFollowingCount(user.uid)
+        store.postsCount = await getPostCount(user.uid)
       })
       .catch((error) => {
         switch (error.code) {
@@ -65,13 +70,10 @@ const handleSubmit = () => {
         const user = userCredential.user
         store.login(user.email, user.uid)
         await createUserInFirestore(user)
-
-        const followerC = await getFollowerCount(user.uid)
-        store.followerCount = followerC
-        const followingC = await getFollowingCount(user.uid)
-        store.followingCount = followingC
-        const postsC = await getPostCount(user.uid)
-        store.postsCount = postsC
+        
+        store.followerCount = await getFollowerCount(user.uid)
+        store.followingCount = await getFollowingCount(user.uid)
+        store.postsCount = await getPostCount(user.uid)
       })
       .catch((error) => {
         switch (error.code) {
