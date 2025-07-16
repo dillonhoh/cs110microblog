@@ -15,6 +15,13 @@ watch(displayId, async (newId) => {
   store.postsCount = await getPostCount(newId)
 })
 
+watch(
+  () => store.postUpdateTrigger,
+  async () => {
+    store.postsCount = await getPostCount(displayId.value)
+  },
+)
+
 </script>
 <template>
   <div class="user-stats">
@@ -25,7 +32,6 @@ watch(displayId, async (newId) => {
     <h1 v-else class="user-email-stats">
       {{ store.currentUser }}
     </h1>
-    {{ displayId }}
     <template v-if="store.isViewingAnotherUser || store.isLoggedIn">
       <div class="profile-stats">
         <div class="stat">
@@ -43,7 +49,7 @@ watch(displayId, async (newId) => {
       </div>
     </template>
     <template v-else>
-
+      <RouterLink to="/login">Log In</RouterLink>
     </template>
     
   </div>

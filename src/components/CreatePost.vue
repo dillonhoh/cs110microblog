@@ -31,7 +31,7 @@ const handleSubmit = async () => {
 }
 </script>
 <template>
-  <div class="create-container">
+  <div  v-if="store.isLoggedIn == true" class="create-container">
     <h1 class="create-title">Create a Post</h1>
     <form class="post-form">
       <input type="text" v-model="content" placeholder="Type a Message" />
@@ -39,6 +39,7 @@ const handleSubmit = async () => {
     </form>
   </div>
 </template>
+
 
 <style>
 .create-container {

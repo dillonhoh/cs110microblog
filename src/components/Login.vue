@@ -120,7 +120,7 @@ const handleSubmit = () => {
         <h1 class="user-email">{{ store.currentUser }}</h1>
         <button type="button" @click="store.logout">Log Out</button>
       </template>
-      <template v-if="errorMessage">
+      <template v-if="errorMessage && !store.isLoggedIn">
         <p class="error">{{ errorMessage }}</p>
       </template>
     </form>
