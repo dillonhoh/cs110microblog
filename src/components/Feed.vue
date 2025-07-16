@@ -5,7 +5,7 @@ import { collection, collectionGroup, query, where, getDocs } from 'firebase/fir
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { computed, watch, onMounted } from 'vue'
-
+import { limit } from 'firebase/firestore'
 const store = useUserStore()
 const route = useRoute()
 const viewedUserId = computed(() => route.params.id || null)
@@ -29,12 +29,28 @@ const getPosts = async () => {
   let q
 
   if (viewedUserId.value) {
-    // Filtered user feed
+    // clicked user feed
     const userPostsRef = collection(firestore, 'users', viewedUserId.value, 'posts')
-    q = query(userPostsRef)
-  } else {
+    q = query(userPostsRef, limit(10))
+  } 
+
+  else if (store.currentUserId) {
+    q = query(collectionGroup(firestore, 'posts'), limit(10))
+
+    const snapshot = await getDocs(q)
+    posts.value=[]
+    snapshot.forEach((doc) => {
+      const post = doc.data()
+      if (store.following.includes(post.userId)) {
+        posts.value.push({ id: doc.id, ...post })
+      }
+    })
+    return 
+  } 
+
+  else {
     // Global feed
-    q = query(collectionGroup(firestore, 'posts'))
+    q = query(collectionGroup(firestore, 'posts'), limit(10))
   }
 
   const snapshot = await getDocs(q)
@@ -48,6 +64,9 @@ const getPosts = async () => {
 <template>
   <div class="feed-container">
     <h1 class="feed-title">Global Feed</h1>
+    <div v-if="posts.length == 0">
+      No posts now. 
+    </div>
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="metadata">{{ post.userEmail }} on {{ post.createdAt.toDate().toLocaleDateString() }} at {{ post.createdAt.toDate().toLocaleTimeString() }}</div>
       <div class="content">

@@ -4,7 +4,7 @@ import { doc, collection, getDocs, updateDoc, arrayUnion } from 'firebase/firest
 import { firestore } from '../firebaseResources'
 import { useUserStore } from '../stores/user'
 import { watch } from 'vue'
-import { getFollowerCount, getFollowingCount, getPostCount } from '../utils/helpers'
+import { getFollowerCount, getFollowingCount, getPostCount, populateFollowing } from '../utils/helpers'
 
 const suggestedEmails = ref([])
 
@@ -12,6 +12,7 @@ const store = useUserStore()
 
 
 onMounted(async () => {
+    await populateFollowing(store.currentUserId)
     suggestedEmails.value = await getSuggestedEmails(store.currentUserId)
 })
 watch(
@@ -27,11 +28,18 @@ const getSuggestedEmails = async (currentUid) => {
   const usersCol = collection(firestore, 'users')
   const snapshot = await getDocs(usersCol)
 
+  const following = store.following || []
+
   const suggestions = []
 
   snapshot.forEach(doc => {
     const data = doc.data()
-    if (!currentUid || doc.id !== currentUid) { // to exclude the current user
+    const userId = doc.id
+
+    if (
+      userId !== currentUid &&          // exclude self
+      !following.includes(userId)       // exclude already following
+    )  {
       suggestions.push({
         uid: doc.id,
         email: data.email,
@@ -59,7 +67,12 @@ const followUser = async (otherUserId) => {
     })
 
     // Optional: trigger re-render or stat update
+    
+    await populateFollowing(currentUid)
+    suggestedEmails.value = await getSuggestedEmails(currentUid)
     store.triggerStatsRefresh()
+    store.triggerPostUpdate()
+
 
   } catch (error) {
     console.error('Error following user:', error)
@@ -76,7 +89,7 @@ const followUser = async (otherUserId) => {
           <router-link :to="`/users/${user.uid}`" 
           @click="store.viewingUser = user.email; 
           store.viewingUserId = user.uid">{{ user.email }}</router-link>
-          <button @click="followUser(user.uid)">Follow</button>
+          <button @click="followUser(user.uid)" v-if="store.isLoggedIn">Follow</button>
         </li>
         
       </ul>

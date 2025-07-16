@@ -9,6 +9,7 @@ import { auth } from '../firebaseResources'
 import { firestore } from '../firebaseResources'
 
 import { getFollowerCount, getFollowingCount, getPostCount } from '../utils/helpers'
+import { populateFollowing } from '../utils/helpers'
 
 const store = useUserStore()
 
@@ -32,6 +33,7 @@ const createUserInFirestore = async (user) => {
   })
 }
 
+
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
@@ -39,10 +41,11 @@ const handleSubmit = () => {
         // Signed up
         const user = userCredential.user
         store.login(user.email, user.uid)
-
+        await populateFollowing(user.uid)
         store.followerCount = await getFollowerCount(user.uid)
         store.followingCount = await getFollowingCount(user.uid)
         store.postsCount = await getPostCount(user.uid)
+        
       })
       .catch((error) => {
         switch (error.code) {
@@ -70,7 +73,8 @@ const handleSubmit = () => {
         const user = userCredential.user
         store.login(user.email, user.uid)
         await createUserInFirestore(user)
-        
+        await populateFollowing(user.uid)
+
         store.followerCount = await getFollowerCount(user.uid)
         store.followingCount = await getFollowingCount(user.uid)
         store.postsCount = await getPostCount(user.uid)

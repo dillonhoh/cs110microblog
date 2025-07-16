@@ -29,6 +29,7 @@ const handleSubmit = async () => {
   store.triggerPostUpdate()
   content.value = ''
 }
+
 </script>
 <template>
   <div  v-if="store.isLoggedIn == true" class="create-container">

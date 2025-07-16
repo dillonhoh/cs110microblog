@@ -1,5 +1,8 @@
 import { doc, getDoc, getDocs, collection } from "firebase/firestore"
 import { firestore } from "../firebaseResources"
+import { useUserStore } from "../stores/user"
+
+
 
 export const getFollowerCount = async (id) => {
   try {
@@ -42,3 +45,22 @@ export const getPostCount = async (id) => {
     return 0
   }
 }
+export const populateFollowing = async (uid) => {
+  const store = useUserStore()
+  try {
+    const userDocRef = doc(firestore, 'users', uid)
+    const snapshot = await getDoc(userDocRef)
+
+    if (snapshot.exists()) {
+      const data = snapshot.data()
+      const following = data.following || []
+      store.following = following
+    } else {
+      store.following = []
+    }
+  } catch (error) {
+    console.error('Error fetching following list:', error)
+    store.following = []
+  }
+}
+
