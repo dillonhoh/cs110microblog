@@ -8,9 +8,7 @@ const suggestedEmails = ref([])
 const store = useUserStore()
 
 onMounted(async () => {
-  if (store.currentUserId) {
     suggestedEmails.value = await getSuggestedEmails(store.currentUserId)
-  }
 })
 const getSuggestedEmails = async (currentUid) => {
   const usersCol = collection(firestore, 'users')
@@ -18,15 +16,17 @@ const getSuggestedEmails = async (currentUid) => {
 
   const suggestions = []
 
+
   snapshot.forEach(doc => {
     const data = doc.data()
-    if (doc.id !== currentUid) { // to exclude the current user from the list
+    if (!currentUid || doc.id !== currentUid) { // to exclude the current user from the list
       suggestions.push({
         uid: doc.id,
         email: data.email,
       })
     }
   })
+
   return suggestions
 }
 
@@ -39,8 +39,9 @@ const getSuggestedEmails = async (currentUid) => {
       <ul>
         <li v-for="user in suggestedEmails" :key="user.uid">
           <router-link :to="`/users/${user.uid}`">{{ user.email }}</router-link>
+          <button @click="followUser(user.uid)">Follow</button>
         </li>
-        <button @click="followUser(user.uid)">Follow</button>
+        
       </ul>
     </section>
     <p v-else>Nobody to Follow, Check Back Later</p>

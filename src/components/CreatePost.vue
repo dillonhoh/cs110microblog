@@ -11,11 +11,12 @@ const store = useUserStore()
 const content = ref('')
 
 const createPost = async (contentText) => {
-  const userId = store.currentUserId
-  const postsCollection = collection(firestore, 'users', userId, 'posts')
+  const postsCollection = collection(firestore, 'users', store.currentUserId, 'posts')
 
   await addDoc(postsCollection, {
     content: contentText,
+    userId: store.currentUserId,
+    userEmail: store.currentUser,
     createdAt: serverTimestamp()
   })
 }

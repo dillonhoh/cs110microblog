@@ -7,21 +7,14 @@ import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import CreatePost from '@/components/CreatePost.vue'
 
-const route = useRoute()
-const userID = ref(route.params.id || '')
-watch(
-  () => route.params.id,
-  (newID) => {
-    userID.value = newID
-  },
-)
+
 </script>
 
 <template>
   <main>
     <UserStats />
     <div class="middle">
-      <Feed :userID="userID" />
+      <Feed />
       <CreatePost />
     </div>
 

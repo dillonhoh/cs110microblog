@@ -1,58 +1,52 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { firestore } from '../firebaseResources'
+import { collection, collectionGroup, query, where, getDocs} from 'firebase/firestore'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { computed } from 'vue'
 
-const props = defineProps({
-  userID: String,
+const store = useUserStore()
+const route = useRoute()
+const viewedUserId = computed(() => route.params.id || null)
+
+const posts = ref([])
+
+
+onMounted(async () => {
+  await getPosts()
 })
 
-const posts = ref([
-  {
-    author: 'bubster100@gmail.com',
-    id: '1',
-    timestamp: '2025-07-09T11:38:00',
-    content: 'hi im bubster',
-  },
-  {
-    author: 'superguy@gmail.com',
-    id: '2',
-    timestamp: '2025-06-09T09:40:23',
-    content: 'did u guys watch new movie?',
-  },
-  {
-    author: 'pilatesprincess@gmail.com',
-    id: '3',
-    timestamp: '2025-06-11T04:30:43',
-    content: 'Lets do pilates!',
-  },
-  {
-    author: 'hectagon@ucr.edu',
-    id: '4',
-    timestamp: '2025-06-16T05:20:18',
-    content: 'im a shape',
-  },
-  {
-    author: 'spook@yahoo.com',
-    id: '5',
-    timestamp: '2025-07-03T08:22:02',
-    content: 'spook',
-  },
-])
+const getPosts = async () => {
+  let q
 
-const filteredPosts = computed(() => {
-  return props.userID ? posts.value.filter((post) => post.id === props.userID) : posts.value
-})
+  if (viewedUserId.value) {
+    // Filtered user feed
+    const userPostsRef = collection(firestore, 'users', viewedUserId.value, 'posts')
+    q = query(userPostsRef)
+  } else {
+    // Global feed
+    q = query(collectionGroup(firestore, 'posts'))
+  }
 
-const formatDateTime = (isoString) => {
-  const date = new Date(isoString)
-  return date.toLocaleString()
+  const snapshot = await getDocs(q)
+  posts.value = []
+
+  snapshot.forEach(doc => {
+    posts.value.push({ id: doc.id, ...doc.data() })
+  })
+
+
 }
+
 </script>
 <template>
   <div class="feed-container">
     <h1 class="feed-title">Global Feed</h1>
-
-    <div v-for="(post, index) in filteredPosts" :key="index" class="post">
-      <div class="meta">@{{ post.author }} on {{ formatDateTime(post.timestamp) }}</div>
+    <div>{{ viewedUserId }}</div>
+    <div v-for="post in posts" :key="post.id" class="post">
+      <div class="metadata">{{ post.userEmail }} on {{ post.createdAt }}</div>
       <div class="content">
         {{ post.content }}
       </div>
