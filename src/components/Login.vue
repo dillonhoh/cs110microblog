@@ -22,12 +22,12 @@ const clearForm = () => {
 
 const createUserInFirestore = async (user) => {
   const userRef = doc(firestore, 'users', user.uid) // exists as a pointer/reference to the document
-  await setDoc(userRef, { // actually modifying/creating the database
+  await setDoc(userRef, {
+    // actually modifying/creating the database
     email: user.email,
     followers: [],
-    following: []
-  }
-)
+    following: [],
+  })
 }
 
 const getFollowerCount = async (uid) => {
@@ -41,7 +41,7 @@ const getFollowerCount = async (uid) => {
       return followers.length
     }
   } catch (error) {
-    console.error("Failed to get follower count:", error)
+    console.error('Failed to get follower count:', error)
     return 0
   }
 }
@@ -56,7 +56,7 @@ const getFollowingCount = async (uid) => {
       return following.length
     }
   } catch (error) {
-    console.error("Failed to get following count:", error)
+    console.error('Failed to get following count:', error)
     return 0
   }
 }
@@ -67,7 +67,7 @@ const getPostCount = async (uid) => {
 
     return snapshot.size
   } catch (error) {
-    console.error("Failed to get posts count:", error)
+    console.error('Failed to get posts count:', error)
     return 0
   }
 }
@@ -78,7 +78,7 @@ const handleSubmit = () => {
       .then(async (userCredential) => {
         // Signed up
         const user = userCredential.user
-        store.login(user.email, user.uid) 
+        store.login(user.email, user.uid)
 
         const followerC = await getFollowerCount(user.uid)
         store.followerCount = followerC
@@ -112,7 +112,7 @@ const handleSubmit = () => {
         // Signed in
         const user = userCredential.user
         store.login(user.email, user.uid)
-        await createUserInFirestore(user) 
+        await createUserInFirestore(user)
 
         const followerC = await getFollowerCount(user.uid)
         store.followerCount = followerC
@@ -120,7 +120,6 @@ const handleSubmit = () => {
         store.followingCount = followingC
         const postsC = await getPostCount(user.uid)
         store.postsCount = postsC
-     
       })
       .catch((error) => {
         switch (error.code) {
@@ -130,7 +129,7 @@ const handleSubmit = () => {
           case 'auth/email-already-in-use':
             errorMessage.value = 'Email is already registered.'
             break
-            case 'auth/weak-password':
+          case 'auth/weak-password':
             errorMessage.value = 'Password is too weak.'
             break
           default:
@@ -141,16 +140,16 @@ const handleSubmit = () => {
   }
   clearForm()
 }
-
-
 </script>
 
 <template>
   <div class="form-container">
     <form>
-       <template v-if="!store.isLoggedIn">
+      <template v-if="!store.isLoggedIn">
         <div class="option">
-          <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')">Log In</a>
+          <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')"
+            >Log In</a
+          >
           <a :class="{ active: !store.isLogin }" @click.prevent="store.toggleMode('signup')"
             >Sign Up</a
           >
@@ -214,7 +213,7 @@ h1 {
   color: lightcoral;
   margin-bottom: 15px;
 }
-.user-email{
+.user-email {
   text-align: center;
   margin-top: 10px;
   margin-bottom: 5px;

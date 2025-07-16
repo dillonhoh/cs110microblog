@@ -1,5 +1,4 @@
 <script setup>
-
 import { ref } from 'vue'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 
@@ -17,7 +16,7 @@ const createPost = async (contentText) => {
     content: contentText,
     userId: store.currentUserId,
     userEmail: store.currentUser,
-    createdAt: serverTimestamp()
+    createdAt: serverTimestamp(),
   })
 }
 

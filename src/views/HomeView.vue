@@ -6,8 +6,6 @@ import FollowSuggestion from '@/components/FollowSuggestion.vue'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import CreatePost from '@/components/CreatePost.vue'
-
-
 </script>
 
 <template>

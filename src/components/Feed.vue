@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { firestore } from '../firebaseResources'
-import { collection, collectionGroup, query, where, getDocs} from 'firebase/firestore'
+import { collection, collectionGroup, query, where, getDocs } from 'firebase/firestore'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { computed, watch, onMounted } from 'vue'
@@ -14,9 +14,12 @@ const posts = ref([])
 watch(viewedUserId, async (newId, oldId) => {
   await getPosts()
 })
-watch(() => store.postUpdateTrigger, async () => {
-  await getPosts()
-})
+watch(
+  () => store.postUpdateTrigger,
+  async () => {
+    await getPosts()
+  },
+)
 
 onMounted(async () => {
   await getPosts()
@@ -37,19 +40,16 @@ const getPosts = async () => {
   const snapshot = await getDocs(q)
   posts.value = []
 
-  snapshot.forEach(doc => {
+  snapshot.forEach((doc) => {
     posts.value.push({ id: doc.id, ...doc.data() })
   })
-
-
 }
-
 </script>
 <template>
   <div class="feed-container">
     <h1 class="feed-title">Global Feed</h1>
     <div v-for="post in posts" :key="post.id" class="post">
-      <div class="metadata">{{ post.userEmail }} on {{ post.createdAt }}</div>
+      <div class="metadata">{{ post.userEmail }} on {{ post.createdAt.toDate().toLocaleDateString() }} at {{ post.createdAt.toDate().toLocaleTimeString() }}</div>
       <div class="content">
         {{ post.content }}
       </div>

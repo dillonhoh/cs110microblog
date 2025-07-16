@@ -5,6 +5,7 @@ export const useUserStore = defineStore('user', {
     currentUser: '',
     currentUserId: '',
     viewingUser: '',
+    viewingUserId: '',
     isLoggedIn: false,
     mode: 'login',
 
@@ -12,7 +13,7 @@ export const useUserStore = defineStore('user', {
     followerCount: 1,
     postsCount: 1,
 
-    postUpdateTrigger: 0
+    postUpdateTrigger: 0,
   }),
   actions: {
     toggleMode(modeInput) {
@@ -31,7 +32,7 @@ export const useUserStore = defineStore('user', {
 
     triggerPostUpdate() {
       this.postUpdateTrigger++
-    }
+    },
   },
   getters: {
     isLogin: (state) => state.mode === 'login',
