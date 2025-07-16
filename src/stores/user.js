@@ -14,6 +14,7 @@ export const useUserStore = defineStore('user', {
     postsCount: 1,
 
     postUpdateTrigger: 0,
+    statsRefreshTrigger: 0,
   }),
   actions: {
     toggleMode(modeInput) {
@@ -33,6 +34,9 @@ export const useUserStore = defineStore('user', {
     triggerPostUpdate() {
       this.postUpdateTrigger++
     },
+    triggerStatsRefresh() {
+      this.statsRefreshTrigger++
+    }
   },
   getters: {
     isLogin: (state) => state.mode === 'login',

@@ -1,25 +1,37 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { collection, getDocs } from 'firebase/firestore'
+import { doc, collection, getDocs, updateDoc, arrayUnion } from 'firebase/firestore'
 import { firestore } from '../firebaseResources'
 import { useUserStore } from '../stores/user'
+import { watch } from 'vue'
+import { getFollowerCount, getFollowingCount, getPostCount } from '../utils/helpers'
 
 const suggestedEmails = ref([])
+
 const store = useUserStore()
+
 
 onMounted(async () => {
     suggestedEmails.value = await getSuggestedEmails(store.currentUserId)
 })
+watch(
+  () => store.statsRefreshTrigger,
+  async () => {
+    store.followerCount = await getFollowerCount(store.currentUserId)
+    store.followingCount = await getFollowingCount(store.currentUserId)
+    store.postsCount = await getPostCount(store.currentUserId)
+  }
+)
+
 const getSuggestedEmails = async (currentUid) => {
   const usersCol = collection(firestore, 'users')
   const snapshot = await getDocs(usersCol)
 
   const suggestions = []
 
-
   snapshot.forEach(doc => {
     const data = doc.data()
-    if (!currentUid || doc.id !== currentUid) { // to exclude the current user from the list
+    if (!currentUid || doc.id !== currentUid) { // to exclude the current user
       suggestions.push({
         uid: doc.id,
         email: data.email,
@@ -29,7 +41,30 @@ const getSuggestedEmails = async (currentUid) => {
 
   return suggestions
 }
+const followUser = async (otherUserId) => {
+  const currentUid = store.currentUserId
+  if (!currentUid || !otherUserId || currentUid === otherUserId) return
 
+  try {
+    // Add to current user's "following"
+    const currentUserRef = doc(firestore, 'users', currentUid)
+    await updateDoc(currentUserRef, {
+      following: arrayUnion(otherUserId)
+    })
+
+    // Add to target user's "followers"
+    const targetUserRef = doc(firestore, 'users', otherUserId)
+    await updateDoc(targetUserRef, {
+      followers: arrayUnion(currentUid)
+    })
+
+    // Optional: trigger re-render or stat update
+    store.triggerStatsRefresh()
+
+  } catch (error) {
+    console.error('Error following user:', error)
+  }
+}
 </script>
 
 <template>
