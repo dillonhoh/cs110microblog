@@ -1,11 +1,14 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useUserStore } from './stores/user'
+
+  const store = useUserStore()
 </script>
 
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/" @click="store.viewingUserId = ''; store.viewingUser ='' ">Home</RouterLink>
       <RouterLink to="/login" class="right-link">Log In</RouterLink>
     </nav>
   </header>

@@ -30,48 +30,6 @@ const createUserInFirestore = async (user) => {
   })
 }
 
-const getFollowerCount = async (uid) => {
-  try {
-    const userRef = doc(firestore, 'users', uid)
-    const snapshot = await getDoc(userRef)
-
-    if (snapshot.exists()) {
-      const data = snapshot.data()
-      const followers = data.followers || []
-      return followers.length
-    }
-  } catch (error) {
-    console.error('Failed to get follower count:', error)
-    return 0
-  }
-}
-const getFollowingCount = async (uid) => {
-  try {
-    const userRef = doc(firestore, 'users', uid)
-    const snapshot = await getDoc(userRef)
-
-    if (snapshot.exists()) {
-      const data = snapshot.data()
-      const following = data.following || []
-      return following.length
-    }
-  } catch (error) {
-    console.error('Failed to get following count:', error)
-    return 0
-  }
-}
-const getPostCount = async (uid) => {
-  try {
-    const postRef = collection(firestore, 'users', uid, 'posts')
-    const snapshot = await getDocs(postRef)
-
-    return snapshot.size
-  } catch (error) {
-    console.error('Failed to get posts count:', error)
-    return 0
-  }
-}
-
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
@@ -80,12 +38,6 @@ const handleSubmit = () => {
         const user = userCredential.user
         store.login(user.email, user.uid)
 
-        const followerC = await getFollowerCount(user.uid)
-        store.followerCount = followerC
-        const followingC = await getFollowingCount(user.uid)
-        store.followingCount = followingC
-        const postsC = await getPostCount(user.uid)
-        store.postsCount = postsC
       })
       .catch((error) => {
         switch (error.code) {
