@@ -26,7 +26,8 @@ const createUserInFirestore = async (user) => {
     email: user.email,
     followers: [],
     following: []
-  })
+  }
+)
 }
 
 const getFollowerCount = async (uid) => {

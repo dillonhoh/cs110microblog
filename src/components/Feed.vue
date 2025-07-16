@@ -3,16 +3,17 @@ import { ref } from 'vue'
 import { firestore } from '../firebaseResources'
 import { collection, collectionGroup, query, where, getDocs} from 'firebase/firestore'
 import { useRoute } from 'vue-router'
-import { onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { computed } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 
 const store = useUserStore()
 const route = useRoute()
 const viewedUserId = computed(() => route.params.id || null)
 
 const posts = ref([])
-
+watch(viewedUserId, async (newId, oldId) => {
+  await getPosts()
+})
 
 onMounted(async () => {
   await getPosts()
