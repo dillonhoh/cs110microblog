@@ -1,21 +1,97 @@
 <script setup>
-const suggestedEmails = [
-  { email: 'bubster100@gmail.com', id: '1' },
-  { email: 'superguy@gmail.com', id: '2' },
-  { email: 'pilatesprincess@gmail.com', id: '3' },
-  { email: 'hectagon@ucr.edu', id: '4' },
-  { email: 'spook@yahoo.com', id: '5' },
-]
+import { ref, onMounted } from 'vue'
+import { doc, collection, getDocs, updateDoc, arrayUnion } from 'firebase/firestore'
+import { firestore } from '../firebaseResources'
+import { useUserStore } from '../stores/user'
+import { watch } from 'vue'
+import { getFollowerCount, getFollowingCount, getPostCount, populateFollowing } from '../utils/helpers'
+
+const suggestedEmails = ref([])
+
+const store = useUserStore()
+
+
+onMounted(async () => {
+    await populateFollowing(store.currentUserId)
+    suggestedEmails.value = await getSuggestedEmails(store.currentUserId)
+})
+watch(
+  () => store.statsRefreshTrigger,
+  async () => {
+    store.followerCount = await getFollowerCount(store.currentUserId)
+    store.followingCount = await getFollowingCount(store.currentUserId)
+    store.postsCount = await getPostCount(store.currentUserId)
+  }
+)
+
+const getSuggestedEmails = async (currentUid) => {
+  const usersCol = collection(firestore, 'users')
+  const snapshot = await getDocs(usersCol)
+
+  const following = store.following || []
+
+  const suggestions = []
+
+  snapshot.forEach(doc => {
+    const data = doc.data()
+    const userId = doc.id
+
+    if (
+      userId !== currentUid &&          // exclude self
+      !following.includes(userId)       // exclude already following
+    )  {
+      suggestions.push({
+        uid: doc.id,
+        email: data.email,
+      })
+    }
+  })
+
+  return suggestions
+}
+const followUser = async (otherUserId) => {
+  const currentUid = store.currentUserId
+  if (!currentUid || !otherUserId || currentUid === otherUserId) return
+
+  try {
+    // Add to current user's "following"
+    const currentUserRef = doc(firestore, 'users', currentUid)
+    await updateDoc(currentUserRef, {
+      following: arrayUnion(otherUserId)
+    })
+
+    // Add to target user's "followers"
+    const targetUserRef = doc(firestore, 'users', otherUserId)
+    await updateDoc(targetUserRef, {
+      followers: arrayUnion(currentUid)
+    })
+
+    // Optional: trigger re-render or stat update
+    
+    await populateFollowing(currentUid)
+    suggestedEmails.value = await getSuggestedEmails(currentUid)
+    store.triggerStatsRefresh()
+    store.triggerPostUpdate()
+
+
+  } catch (error) {
+    console.error('Error following user:', error)
+  }
+}
 </script>
 
 <template>
   <div class="suggestion-container">
     <h1 class="suggestion-title">Suggested Following</h1>
-    <section v-if="true">
+    <section v-if="suggestedEmails.length > 0">
       <ul>
-        <li v-for="email in suggestedEmails" :key="email.id">
-          <router-link :to="`/users/${email.id}`">{{ email.email }}</router-link>
+        <li v-for="user in suggestedEmails" :key="user.uid">
+          <router-link :to="`/users/${user.uid}`" 
+          @click="store.viewingUser = user.email; 
+          store.viewingUserId = user.uid">{{ user.email }}</router-link>
+          <button @click="followUser(user.uid)" v-if="store.isLoggedIn">Follow</button>
         </li>
+        
       </ul>
     </section>
     <p v-else>Nobody to Follow, Check Back Later</p>

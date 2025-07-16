@@ -1,8 +1,15 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore'
+
 import { auth } from '../firebaseResources'
+import { firestore } from '../firebaseResources'
+
+import { getFollowerCount, getFollowingCount, getPostCount } from '../utils/helpers'
+import { populateFollowing } from '../utils/helpers'
 
 const store = useUserStore()
 
@@ -15,13 +22,30 @@ const clearForm = () => {
   emailForm.value = ''
   password.value = ''
 }
+
+const createUserInFirestore = async (user) => {
+  const userRef = doc(firestore, 'users', user.uid) // exists as a pointer/reference to the document
+  await setDoc(userRef, {
+    // actually modifying/creating the database
+    email: user.email,
+    followers: [],
+    following: [],
+  })
+}
+
+
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed up
         const user = userCredential.user
-        store.login(user.email)
+        store.login(user.email, user.uid)
+        await populateFollowing(user.uid)
+        store.followerCount = await getFollowerCount(user.uid)
+        store.followingCount = await getFollowingCount(user.uid)
+        store.postsCount = await getPostCount(user.uid)
+        
       })
       .catch((error) => {
         switch (error.code) {
@@ -44,10 +68,16 @@ const handleSubmit = () => {
       })
   } else {
     createUserWithEmailAndPassword(auth, emailForm.value, password.value)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user
-        store.login(user.email)
+        store.login(user.email, user.uid)
+        await createUserInFirestore(user)
+        await populateFollowing(user.uid)
+
+        store.followerCount = await getFollowerCount(user.uid)
+        store.followingCount = await getFollowingCount(user.uid)
+        store.postsCount = await getPostCount(user.uid)
       })
       .catch((error) => {
         switch (error.code) {
@@ -57,11 +87,11 @@ const handleSubmit = () => {
           case 'auth/email-already-in-use':
             errorMessage.value = 'Email is already registered.'
             break
-            case 'auth/weak-password':
+          case 'auth/weak-password':
             errorMessage.value = 'Password is too weak.'
             break
           default:
-            errorMessage.value = 'Unhandled Firebase auth error:'
+            errorMessage.value = 'Unhandled Firebase auth error'
         }
         clearForm()
       })
@@ -73,9 +103,11 @@ const handleSubmit = () => {
 <template>
   <div class="form-container">
     <form>
-       <template v-if="!store.isLoggedIn">
+      <template v-if="!store.isLoggedIn">
         <div class="option">
-          <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')">Log In</a>
+          <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')"
+            >Log In</a
+          >
           <a :class="{ active: !store.isLogin }" @click.prevent="store.toggleMode('signup')"
             >Sign Up</a
           >
@@ -92,7 +124,7 @@ const handleSubmit = () => {
         <h1 class="user-email">{{ store.currentUser }}</h1>
         <button type="button" @click="store.logout">Log Out</button>
       </template>
-      <template v-if="errorMessage">
+      <template v-if="errorMessage && !store.isLoggedIn">
         <p class="error">{{ errorMessage }}</p>
       </template>
     </form>
@@ -139,7 +171,7 @@ h1 {
   color: lightcoral;
   margin-bottom: 15px;
 }
-.user-email{
+.user-email {
   text-align: center;
   margin-top: 10px;
   margin-bottom: 5px;

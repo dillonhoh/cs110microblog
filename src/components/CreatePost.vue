@@ -1,16 +1,38 @@
 <script setup>
 import { ref } from 'vue'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+
+import { firestore } from '../firebaseResources'
+import { useUserStore } from '../stores/user'
+import { watch } from 'vue'
+const store = useUserStore()
+
 const content = ref('')
-const handleSubmit = () => {
+
+const createPost = async (contentText) => {
+  const postsCollection = collection(firestore, 'users', store.currentUserId, 'posts')
+
+  await addDoc(postsCollection, {
+    content: contentText,
+    userId: store.currentUserId,
+    userEmail: store.currentUser,
+    createdAt: serverTimestamp(),
+  })
+}
+
+const handleSubmit = async () => {
   if (!content.value.trim()) {
     alert(`Post must not be empty!`)
     return
   }
+  await createPost(content.value)
+  store.triggerPostUpdate()
   content.value = ''
 }
+
 </script>
 <template>
-  <div class="create-container">
+  <div  v-if="store.isLoggedIn == true" class="create-container">
     <h1 class="create-title">Create a Post</h1>
     <form class="post-form">
       <input type="text" v-model="content" placeholder="Type a Message" />
@@ -18,6 +40,7 @@ const handleSubmit = () => {
     </form>
   </div>
 </template>
+
 
 <style>
 .create-container {
