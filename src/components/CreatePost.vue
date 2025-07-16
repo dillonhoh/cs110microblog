@@ -5,7 +5,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 
 import { firestore } from '../firebaseResources'
 import { useUserStore } from '../stores/user'
-
+import { watch } from 'vue'
 const store = useUserStore()
 
 const content = ref('')
@@ -27,6 +27,7 @@ const handleSubmit = async () => {
     return
   }
   await createPost(content.value)
+  store.triggerPostUpdate()
   content.value = ''
 }
 </script>

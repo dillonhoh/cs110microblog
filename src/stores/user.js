@@ -11,6 +11,8 @@ export const useUserStore = defineStore('user', {
     followingCount: 1,
     followerCount: 1,
     postsCount: 1,
+
+    postUpdateTrigger: 0
   }),
   actions: {
     toggleMode(modeInput) {
@@ -27,12 +29,9 @@ export const useUserStore = defineStore('user', {
       this.isLoggedIn = false
     },
 
-    incrementFollowing() {
-      this.following += 1
-    },
-    incrementFollowers() {
-      this.followers += 1
-    },
+    triggerPostUpdate() {
+      this.postUpdateTrigger++
+    }
   },
   getters: {
     isLogin: (state) => state.mode === 'login',

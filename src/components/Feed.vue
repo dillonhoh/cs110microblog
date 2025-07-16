@@ -14,6 +14,9 @@ const posts = ref([])
 watch(viewedUserId, async (newId, oldId) => {
   await getPosts()
 })
+watch(() => store.postUpdateTrigger, async () => {
+  await getPosts()
+})
 
 onMounted(async () => {
   await getPosts()
@@ -45,7 +48,6 @@ const getPosts = async () => {
 <template>
   <div class="feed-container">
     <h1 class="feed-title">Global Feed</h1>
-    <div>{{ viewedUserId }}</div>
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="metadata">{{ post.userEmail }} on {{ post.createdAt }}</div>
       <div class="content">
