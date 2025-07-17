@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { doc, collection, getDocs, updateDoc, arrayUnion } from 'firebase/firestore'
+import { doc, collection, getDocs, updateDoc, arrayUnion, query } from 'firebase/firestore'
 import { firestore } from '../firebaseResources'
 import { useUserStore } from '../stores/user'
 import { watch } from 'vue'
 import { getFollowerCount, getFollowingCount, getPostCount, populateFollowing } from '../utils/helpers'
+import { limit
 
+ } from 'firebase/firestore'
 const suggestedEmails = ref([])
 
 const store = useUserStore()
@@ -26,7 +28,8 @@ watch(
 
 const getSuggestedEmails = async (currentUid) => {
   const usersCol = collection(firestore, 'users')
-  const snapshot = await getDocs(usersCol)
+  const q = query(usersCol, limit(15))
+  const snapshot = await getDocs(q)
 
   const following = store.following || []
 
@@ -47,7 +50,7 @@ const getSuggestedEmails = async (currentUid) => {
     }
   })
 
-  return suggestions
+  return suggestions.slice(0, 5)
 }
 const followUser = async (otherUserId) => {
   const currentUid = store.currentUserId
