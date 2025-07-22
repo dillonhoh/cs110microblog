@@ -35,7 +35,7 @@ const handleSubmit = async () => {
   <div  v-if="store.isLoggedIn == true" class="create-container">
     <h1 class="create-title">Create a Post</h1>
     <form class="post-form">
-      <input type="text" v-model="content" placeholder="Type a Message"  class="input-content"/>
+      <textarea v-model="content" placeholder="Type a Message" class="input-content"></textarea>
       <button type="button" @click="handleSubmit" class="input-button">Post</button>
     </form>
   </div>
@@ -58,7 +58,8 @@ const handleSubmit = async () => {
   display: flex;
 }
 .input-content{
-  
+  height: 50px;
+  resize: none;
 }
 .input-button{
   width: 50px;
