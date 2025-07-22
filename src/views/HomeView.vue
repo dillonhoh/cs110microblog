@@ -5,6 +5,11 @@ import FollowSuggestion from '@/components/FollowSuggestion.vue'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import CreatePost from '@/components/CreatePost.vue'
+import DownloadPdf from '@/components/DownloadPdf.vue'
+import { useUserStore } from '@/stores/user'
+
+const store = useUserStore()
+
 </script>
 
 <template>
@@ -12,6 +17,7 @@ import CreatePost from '@/components/CreatePost.vue'
     <div class="left">
       <UserStats />
       <FollowSuggestion class="followsugg" />
+      <DownloadPdf v-if="store.isViewingAnotherUser"/>
     </div>
 
     <div class="right">
