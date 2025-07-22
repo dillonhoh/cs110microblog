@@ -10,7 +10,10 @@ import { useUserStore } from './stores/user'
     <nav>
       <RouterLink to="/" @click="store.viewingUserId = ''; store.viewingUser ='' ">Home</RouterLink>
       <RouterLink to="/login" class="right-link">Log In</RouterLink>
-      <router-link class="my-posts" v-if="store.currentUserId" :to="{ name: 'userFeed', params: { id: store.currentUserId } }">My Posts</router-link>
+      <router-link class="my-posts" 
+          @click="store.viewingUser = store.currentUser; 
+          store.viewingUserId = store.currentUserId"
+      v-if="store.currentUserId" :to="{ name: 'userFeed', params: { id: store.currentUserId } }">My Posts</router-link>
     </nav>
   </header>
 
