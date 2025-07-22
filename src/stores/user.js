@@ -9,7 +9,6 @@ export const useUserStore = defineStore('user', {
     isLoggedIn: false,
     mode: 'login',
 
-    
     followingCount: 1,
     followerCount: 1,
     postsCount: 1,
@@ -37,7 +36,7 @@ export const useUserStore = defineStore('user', {
     },
     triggerStatsRefresh() {
       this.statsRefreshTrigger++
-    }
+    },
   },
   getters: {
     isLogin: (state) => state.mode === 'login',

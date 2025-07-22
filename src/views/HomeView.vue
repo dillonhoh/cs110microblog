@@ -11,22 +11,19 @@ import CreatePost from '@/components/CreatePost.vue'
   <main>
     <div class="left">
       <UserStats />
-      <FollowSuggestion class="followsugg"/>
-    </div>
-    
-    <div class="right">
-      <Feed />
-      <CreatePost class="createpost"/>
+      <FollowSuggestion class="followsugg" />
     </div>
 
-    
+    <div class="right">
+      <Feed />
+    </div>
+    <CreatePost class="createpost" />
   </main>
 </template>
 
 <style>
-
 .followsugg {
-  margin-top: 50px;
+  margin-top: 25px;
 }
 .createpost {
   height: 100%;
@@ -38,6 +35,5 @@ main {
   margin-top: 40px;
 }
 .right {
-  display: flex;
 }
 </style>

@@ -31,7 +31,7 @@ watch(
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const themes = [
@@ -48,7 +48,7 @@ const themes = [
   {
     name: 'celebration',
     label: 'Celebration',
-    bg: '/celebration.svg'
+    bg: '/celebration.svg',
   },
 ]
 
@@ -71,9 +71,9 @@ async function downloadPoster() {
 <template>
   <div class="poster-editor" v-if="!loading">
     <div class="theme-options">
-      <button 
-        v-for="theme in themes" 
-        :key="theme.name" 
+      <button
+        v-for="theme in themes"
+        :key="theme.name"
         @click="selectTheme(theme)"
         :class="{ active: selectedTheme.name === theme.name }"
       >
@@ -81,8 +81,12 @@ async function downloadPoster() {
       </button>
     </div>
 
-    <div id="poster" class="poster-area" :class="`theme-${selectedTheme.name}`" :style="{ backgroundImage: `url(${selectedTheme.bg})` }">
-      
+    <div
+      id="poster"
+      class="poster-area"
+      :class="`theme-${selectedTheme.name}`"
+      :style="{ backgroundImage: `url(${selectedTheme.bg})` }"
+    >
       <p class="metauser">{{ post.userEmail }}</p>
       <p class="metadate">{{ post.createdAt.toDate().toLocaleDateString() }}</p>
       <h1 class="content">
@@ -117,22 +121,22 @@ button.active {
   display: flex;
   flex-direction: column;
 }
-.theme-classic .metauser{
+.theme-classic .metauser {
   font-family: 'Instrument Sans';
   text-decoration: underline;
   font-size: 28px;
 }
-.theme-classic .metadate{
+.theme-classic .metadate {
   font-family: 'Instrument Sans';
   font-size: 18px;
 }
-.theme-classic .content{
+.theme-classic .content {
   font-family: 'Martian Mono';
   font-weight: 100;
   font-size: 21px;
   margin-top: 150px;
 }
-.theme-sunset .metauser{
+.theme-sunset .metauser {
   margin-top: 65px;
   font-family: 'Montserrat';
   align-self: center;
@@ -140,14 +144,14 @@ button.active {
   font-weight: 700;
   text-align: center;
 }
-.theme-sunset .metadate{
+.theme-sunset .metadate {
   margin-top: 17px;
   font-family: 'Montserrat';
   align-self: center;
   font-size: 20px;
   font-weight: 600;
 }
-.theme-sunset .content{
+.theme-sunset .content {
   font-family: 'Open Sans';
   font-weight: 300;
   font-size: 21px;
@@ -156,7 +160,7 @@ button.active {
   align-self: center;
   max-width: 340px;
 }
-.theme-celebration .metauser{
+.theme-celebration .metauser {
   margin-top: 250px;
   font-family: 'Montserrat';
   align-self: center;
@@ -164,14 +168,14 @@ button.active {
   font-weight: 700;
   text-align: center;
 }
-.theme-celebration .metadate{
+.theme-celebration .metadate {
   margin-top: 17px;
   font-family: 'Montserrat';
   align-self: center;
   font-size: 20px;
   font-weight: 600;
 }
-.theme-celebration .content{
+.theme-celebration .content {
   font-family: 'Comic Sans MS';
   font-weight: 700;
   font-size: 40px;
@@ -181,7 +185,7 @@ button.active {
   max-width: 420px;
 }
 
-.content{
-    text-align: left;
+.content {
+  text-align: left;
 }
 </style>

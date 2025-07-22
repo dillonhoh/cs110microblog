@@ -5,4 +5,3 @@ import PosterRenderer from '@/components/PosterRenderer.vue'
 <template>
   <PosterRenderer />
 </template>
-

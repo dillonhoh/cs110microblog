@@ -23,8 +23,8 @@ const router = createRouter({
       path: '/poster/:userId/:id',
       name: 'Poster',
       component: () => import('@/views/PosterView.vue'),
-      props: true
-    }
+      props: true,
+    },
   ],
 })
 

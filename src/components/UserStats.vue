@@ -21,14 +21,13 @@ watch(
     store.postsCount = await getPostCount(displayId.value)
   },
 )
-
 </script>
 <template>
   <div class="user-stats">
     <h1 v-if="store.isViewingAnotherUser" class="user-email-stats">
       {{ store.viewingUser }}
     </h1>
-    
+
     <h1 v-else class="user-email-stats">
       {{ store.currentUser }}
     </h1>
@@ -51,7 +50,6 @@ watch(
     <template v-else>
       <RouterLink to="/login">Log In</RouterLink>
     </template>
-    
   </div>
 </template>
 <style>

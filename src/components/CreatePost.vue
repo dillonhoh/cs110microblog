@@ -29,10 +29,9 @@ const handleSubmit = async () => {
   store.triggerPostUpdate()
   content.value = ''
 }
-
 </script>
 <template>
-  <div  v-if="store.isLoggedIn == true" class="create-container">
+  <div v-if="store.isLoggedIn == true" class="create-container">
     <h1 class="create-title">Create a Post</h1>
     <form class="post-form">
       <textarea v-model="content" placeholder="Type a Message" class="input-content"></textarea>
@@ -41,29 +40,27 @@ const handleSubmit = async () => {
   </div>
 </template>
 
-
 <style>
 .create-container {
   background-color: lightblue;
-  padding: 10px 20px 20px 20px;
+  padding: 20px 40px 20px 40px;
   display: flex;
   flex-direction: column;
 }
 .create-title {
   font-size: 25px;
   font-weight: 500;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 .post-form {
   display: flex;
 }
-.input-content{
-  height: 50px;
+.input-content {
+  height: 60px;
   resize: none;
 }
-.input-button{
+.input-button {
   width: 50px;
   margin-top: 10px;
 }
-
 </style>
