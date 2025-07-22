@@ -5,33 +5,31 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-// Get post data passed via route query or props
 const post = ref({
   text: route.query.text || 'Example post text',
   email: route.query.email || 'user@example.com',
   date: route.query.date || new Date().toLocaleDateString(),
 })
 
-// Poster themes
 const themes = [
   {
     name: 'classic',
     label: 'Classic',
-    bg: '/celebration.png',
+    bg: '/classic.svg',
     font: 'Georgia, serif',
     size: '32px'
   },
   {
-    name: 'modern',
-    label: 'Modern',
-    bg: '/celebration.png',
+    name: 'sunset',
+    label: 'Sunset',
+    bg: '/sunset.svg',
     font: 'Arial, sans-serif',
     size: '28px'
   },
   {
-    name: 'playful',
-    label: 'Playful',
-    bg: '/celebration.png',
+    name: 'celebration',
+    label: 'Celebration',
+    bg: '/celebration.svg',
     font: '"Comic Sans MS", cursive',
     size: '30px'
   },
@@ -55,7 +53,6 @@ async function downloadPoster() {
 
 <template>
   <div class="poster-editor">
-    <!-- Theme Selector -->
     <div class="theme-options">
       <button 
         v-for="theme in themes" 
@@ -67,18 +64,15 @@ async function downloadPoster() {
       </button>
     </div>
 
-    <!-- Poster Preview Area -->
     <div id="poster" class="poster-area" :style="{ backgroundImage: `url(${selectedTheme.bg})` }">
       
       <p class="metauser">{{ post.email }}</p>
       <p class="metadate">{{ post.date }}</p>
-      <p v-if="selectedTheme.name === 'classic'" class="filler">says...</p>
       <h1 :style="{ fontFamily: selectedTheme.font, fontSize: selectedTheme.size } " class="content">
         {{ post.text }}
       </h1>
     </div>
 
-    <!-- Action -->
     <button @click="downloadPoster">Download Poster</button>
   </div>
 </template>

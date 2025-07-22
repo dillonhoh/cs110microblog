@@ -105,7 +105,7 @@ const followUser = async (otherUserId) => {
 <template>
   <div class="suggestion-container">
     <h1 class="suggestion-title">Suggested Following</h1>
-    <section v-if="suggestedEmails.length > 0">
+    <section v-if="suggestedEmails.length > 0" class="email-container">
       <ul>
         <li v-for="user in suggestedEmails" :key="user.uid">
           <router-link :to="`/users/${user.uid}`" 
@@ -134,6 +134,11 @@ ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: fit-content;
+}
+.email-container ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
 }
 </style>
