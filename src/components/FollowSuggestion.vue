@@ -1,13 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { doc, collection, getDocs, updateDoc, arrayUnion, query } from 'firebase/firestore'
+import { doc, getDoc, collection, getDocs, updateDoc, arrayUnion, query } from 'firebase/firestore'
 import { firestore } from '../firebaseResources'
 import { useUserStore } from '../stores/user'
 import { watch } from 'vue'
 import { getFollowerCount, getFollowingCount, getPostCount, populateFollowing } from '../utils/helpers'
-import { limit
-
- } from 'firebase/firestore'
+import { limit } from 'firebase/firestore'
 const suggestedEmails = ref([])
 
 const store = useUserStore()
@@ -25,6 +23,14 @@ watch(
     store.postsCount = await getPostCount(store.currentUserId)
   }
 )
+watch(
+  () => store.viewingUserId,
+  async (newVal, oldVal) => {
+    
+      suggestedEmails.value = await getSuggestedEmails(store.currentUserId)
+  },
+  { immediate: true }
+)
 
 const getSuggestedEmails = async (currentUid) => {
   const usersCol = collection(firestore, 'users')
@@ -34,7 +40,19 @@ const getSuggestedEmails = async (currentUid) => {
   const following = store.following || []
 
   const suggestions = []
-
+if (store.viewingUserId && store.viewingUserId !== currentUid) {
+  console.log("now viewing other user")
+    const userDoc = await getDoc(doc(firestore, 'users', store.viewingUserId))
+    if (userDoc.exists()) {
+      const data = userDoc.data()
+      suggestions.push({
+        uid: store.viewingUserId,
+        email: data.email,
+      })
+      return suggestions
+    }
+  }
+else{
   snapshot.forEach(doc => {
     const data = doc.data()
     const userId = doc.id
@@ -51,6 +69,7 @@ const getSuggestedEmails = async (currentUid) => {
   })
 
   return suggestions.slice(0, 5)
+}
 }
 const followUser = async (otherUserId) => {
   const currentUid = store.currentUserId

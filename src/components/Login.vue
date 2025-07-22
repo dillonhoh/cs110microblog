@@ -114,15 +114,15 @@ const handleSubmit = () => {
         </div>
       </template>
       <template v-if="!store.isLoggedIn">
-        <input type="text" v-model="emailForm" placeholder="Email" />
-        <input type="password" v-model="password" placeholder="Password" />
+        <input type="text" v-model="emailForm" placeholder="Email" id="email" class="inputs"/>
+        <input type="password" v-model="password" placeholder="Password" id="password" class="inputs"/>
         <button type="button" @click="handleSubmit">
           {{ store.isLogin ? 'Log In' : 'Sign Up' }}
         </button>
       </template>
       <template v-else>
         <h1 class="user-email">{{ store.currentUser }}</h1>
-        <button type="button" @click="store.logout">Log Out</button>
+        <button type="button" @click="store.logout" class="logout-button">Log Out</button>
       </template>
       <template v-if="errorMessage && !store.isLoggedIn">
         <p class="error">{{ errorMessage }}</p>
@@ -138,7 +138,7 @@ const handleSubmit = () => {
   background-color: lightblue;
   width: fit-content;
   margin: auto;
-  padding: 0px 15px 0px 15px;
+  padding: 0px 15px 15px 15px;
 }
 .option {
   width: 175px;
@@ -157,11 +157,11 @@ form {
   flex-direction: column;
   width: 175px;
 }
-form input {
+.inputs {
   margin-bottom: 15px;
 }
-form button {
-  margin-bottom: 15px;
+.logout-button {
+  margin-bottom: 0px;
 }
 h1 {
   font-size: 14px;

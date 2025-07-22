@@ -6,6 +6,8 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { computed, watch, onMounted } from 'vue'
 import { limit } from 'firebase/firestore'
+import { orderBy } from 'firebase/firestore'
+
 const store = useUserStore()
 const route = useRoute()
 const viewedUserId = computed(() => route.params.id || null)
@@ -31,11 +33,11 @@ const getPosts = async () => {
   if (viewedUserId.value) {
     // clicked user feed
     const userPostsRef = collection(firestore, 'users', viewedUserId.value, 'posts')
-    q = query(userPostsRef, limit(10))
+    q = query(userPostsRef, orderBy('createdAt', 'desc'), limit(10))
   } 
 
   else if (store.currentUserId) {
-    q = query(collectionGroup(firestore, 'posts'), limit(10))
+    q = query(collectionGroup(firestore, 'posts'), orderBy('createdAt', 'desc'), limit(10))
 
     const snapshot = await getDocs(q)
     posts.value=[]
@@ -50,7 +52,7 @@ const getPosts = async () => {
 
   else {
     // Global feed
-    q = query(collectionGroup(firestore, 'posts'), limit(10))
+    q = query(collectionGroup(firestore, 'posts'), orderBy('createdAt', 'desc'), limit(10))
   }
 
   const snapshot = await getDocs(q)
@@ -68,7 +70,15 @@ const getPosts = async () => {
       No posts now. 
     </div>
     <div v-for="post in posts" :key="post.id" class="post">
-      <div class="metadata">{{ post.userEmail }} on {{ post.createdAt.toDate().toLocaleDateString() }} at {{ post.createdAt.toDate().toLocaleTimeString() }}</div>
+      <div class="email">{{ post.userEmail }}</div>
+      <div class="metadata">
+        <div>{{ post.createdAt.toDate().toLocaleDateString() }}</div>
+        <div class="time">{{ post.createdAt.toDate().toLocaleTimeString() }}</div>
+        </div>
+        <router-link :to="{ name: 'Poster', params: { id: post.id } }">
+      <button class="btn">Make Poster</button>
+    </router-link>
+        <hr>
       <div class="content">
         {{ post.content }}
       </div>
@@ -90,5 +100,18 @@ const getPosts = async () => {
 .post {
   padding-bottom: 20px;
   padding-left: 30px;
+}
+.email {
+  font-weight: 300;
+}
+.metadata {
+  display: flex;
+  justify-content: space-between;
+}
+.time {
+  margin-right: 30px;
+}
+hr {
+  margin-right: 30px;
 }
 </style>

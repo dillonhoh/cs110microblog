@@ -1,6 +1,6 @@
 <script setup>
 import UserStats from '@/components/UserStats.vue'
-import TheWelcome from '../components/TheWelcome.vue'
+
 import Feed from '@/components/Feed.vue'
 import FollowSuggestion from '@/components/FollowSuggestion.vue'
 import { useRoute } from 'vue-router'
@@ -10,24 +10,32 @@ import CreatePost from '@/components/CreatePost.vue'
 
 <template>
   <main>
-    <UserStats />
-    <div class="middle">
+    <div class="left">
+      <UserStats />
+      <FollowSuggestion class="followsugg"/>
+    </div>
+    <CreatePost class="createpost"/>
+    <div class="right">
       <Feed />
-      <CreatePost />
+      
     </div>
 
-    <FollowSuggestion />
+    
   </main>
 </template>
 
 <style>
+
+.followsugg {
+  margin-top: 50px;
+}
+.createpost {
+  height: 100%;
+}
 main {
   display: flex;
   justify-content: space-evenly;
+  align-items: start;
   margin-top: 40px;
-}
-.middle {
-  display: flex;
-  flex-direction: column;
 }
 </style>
