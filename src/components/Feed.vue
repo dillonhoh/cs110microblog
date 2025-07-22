@@ -75,7 +75,7 @@ const getPosts = async () => {
         <div>{{ post.createdAt.toDate().toLocaleDateString() }}</div>
         <div class="time">{{ post.createdAt.toDate().toLocaleTimeString() }}</div>
         </div>
-        <router-link :to="{ name: 'Poster', params: { id: post.id } }">
+        <router-link :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
       <button class="btn">Make Poster</button>
     </router-link>
         <hr>

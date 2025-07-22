@@ -1,15 +1,38 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
+import { doc, getDoc } from 'firebase/firestore'
+import { firestore } from '../firebaseResources'
 
 const route = useRoute()
 
-const post = ref({
-  text: route.query.text || 'cheeseballs',
-  email: route.query.email || 'dogmandoger@gmail.com',
-  date: route.query.date || new Date().toLocaleDateString(),
-})
+const post = ref(null)
+const loading = ref(true)
+
+watch(
+  () => route.params.id,
+  async (postId) => {
+    console.log('Route param id:', postId)
+    if (postId) {
+      try {
+        const userId = route.params.userId
+        const docRef = doc(firestore, 'users', userId, 'posts', postId)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          post.value = docSnap.data()
+        } else {
+          console.error('No such document!')
+        }
+      } catch (err) {
+        console.error('Error fetching post:', err)
+      } finally {
+        loading.value = false
+      }
+    }
+  },
+  { immediate: true }
+)
 
 const themes = [
   {
@@ -46,7 +69,7 @@ async function downloadPoster() {
 </script>
 
 <template>
-  <div class="poster-editor">
+  <div class="poster-editor" v-if="!loading">
     <div class="theme-options">
       <button 
         v-for="theme in themes" 
@@ -60,10 +83,10 @@ async function downloadPoster() {
 
     <div id="poster" class="poster-area" :class="`theme-${selectedTheme.name}`" :style="{ backgroundImage: `url(${selectedTheme.bg})` }">
       
-      <p class="metauser">{{ post.email }}</p>
-      <p class="metadate">{{ post.date }}</p>
+      <p class="metauser">{{ post.userEmail }}</p>
+      <p class="metadate">{{ post.createdAt.toDate().toLocaleDateString() }}</p>
       <h1 class="content">
-        {{ post.text }}
+        {{ post.content }}
       </h1>
     </div>
 
@@ -151,7 +174,7 @@ button.active {
 .theme-celebration .content{
   font-family: 'Comic Sans MS';
   font-weight: 700;
-  font-size: 50px;
+  font-size: 40px;
   text-align: left;
   margin-top: 140px;
   align-self: center;

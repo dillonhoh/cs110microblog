@@ -1,6 +1,5 @@
 <script setup>
 import UserStats from '@/components/UserStats.vue'
-
 import Feed from '@/components/Feed.vue'
 import FollowSuggestion from '@/components/FollowSuggestion.vue'
 import { useRoute } from 'vue-router'
