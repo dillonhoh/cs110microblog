@@ -13,10 +13,10 @@ import CreatePost from '@/components/CreatePost.vue'
       <UserStats />
       <FollowSuggestion class="followsugg"/>
     </div>
-    <CreatePost class="createpost"/>
+    
     <div class="right">
       <Feed />
-      
+      <CreatePost class="createpost"/>
     </div>
 
     
@@ -36,5 +36,8 @@ main {
   justify-content: space-evenly;
   align-items: start;
   margin-top: 40px;
+}
+.right {
+  display: flex;
 }
 </style>

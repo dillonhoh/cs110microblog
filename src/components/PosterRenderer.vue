@@ -176,9 +176,9 @@ button.active {
   font-weight: 700;
   font-size: 40px;
   text-align: left;
-  margin-top: 140px;
+  margin-top: 130px;
   align-self: center;
-  max-width: 340px;
+  max-width: 420px;
 }
 
 .content{

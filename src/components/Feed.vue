@@ -65,7 +65,8 @@ const getPosts = async () => {
 </script>
 <template>
   <div class="feed-container">
-    <h1 class="feed-title">Global Feed</h1>
+    <h1 class="feed-title" v-if="store.isViewingAnotherUser">{{store.viewingUser}}'s Posts</h1>
+    <h1 class="feed-title" v-else>Global Feed</h1>
     <div v-if="posts.length == 0">
       No posts now. 
     </div>
