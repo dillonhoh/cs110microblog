@@ -2,14 +2,31 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from './stores/user'
 
-  const store = useUserStore()
+const store = useUserStore()
 </script>
 
 <template>
   <header>
     <nav>
-      <RouterLink to="/" @click="store.viewingUserId = ''; store.viewingUser ='' ">Home</RouterLink>
+      <RouterLink
+        to="/"
+        @click="
+          store.viewingUserId = '';
+          store.viewingUser = ''
+        "
+        >Home</RouterLink
+      >
       <RouterLink to="/login" class="right-link">Log In</RouterLink>
+      <router-link
+        class="my-posts"
+        @click="
+          store.viewingUser = store.currentUser;
+          store.viewingUserId = store.currentUserId
+        "
+        v-if="store.currentUserId"
+        :to="{ name: 'userFeed', params: { id: store.currentUserId } }"
+        >My Posts</router-link
+      >
     </nav>
   </header>
 
@@ -26,6 +43,9 @@ nav {
 
 nav a.router-link-exact-active {
   color: var(--color-text);
+}
+.my-posts {
+  border-left: 1px solid var(--color-border);
 }
 
 nav a {

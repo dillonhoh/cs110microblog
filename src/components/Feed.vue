@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 import { firestore } from '../firebaseResources'
-import { collection, collectionGroup, query, where, getDocs } from 'firebase/firestore'
+import { collection, collectionGroup, query, getDocs } from 'firebase/firestore'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { computed, watch, onMounted } from 'vue'
 import { limit } from 'firebase/firestore'
 import { orderBy } from 'firebase/firestore'
+import { doc, deleteDoc } from 'firebase/firestore'
+
 
 const store = useUserStore()
 const route = useRoute()
@@ -34,23 +36,19 @@ const getPosts = async () => {
     // clicked user feed
     const userPostsRef = collection(firestore, 'users', viewedUserId.value, 'posts')
     q = query(userPostsRef, orderBy('createdAt', 'desc'), limit(10))
-  } 
-
-  else if (store.currentUserId) {
+  } else if (store.currentUserId) {
     q = query(collectionGroup(firestore, 'posts'), orderBy('createdAt', 'desc'), limit(10))
 
     const snapshot = await getDocs(q)
-    posts.value=[]
+    posts.value = []
     snapshot.forEach((doc) => {
       const post = doc.data()
       if (store.following.includes(post.userId)) {
         posts.value.push({ id: doc.id, ...post })
       }
     })
-    return 
-  } 
-
-  else {
+    return
+  } else {
     // Global feed
     q = query(collectionGroup(firestore, 'posts'), orderBy('createdAt', 'desc'), limit(10))
   }
@@ -62,23 +60,39 @@ const getPosts = async () => {
     posts.value.push({ id: doc.id, ...doc.data() })
   })
 }
+
+const deletePost = async (postId) => {
+  try {
+    const postRef = doc(firestore, 'users', store.currentUserId, 'posts', postId)
+    await deleteDoc(postRef)
+    await getPosts() // refresh post list after deletion
+  } catch (error) {
+    console.error('Failed to delete post:', error)
+  }
+}
 </script>
 <template>
   <div class="feed-container">
-    <h1 class="feed-title">Global Feed</h1>
-    <div v-if="posts.length == 0">
-      No posts now. 
-    </div>
+    <h1 class="feed-title" v-if="store.viewingUser == store.currentUser">My Posts</h1>
+    <h1 class="feed-title" v-else-if="store.isViewingAnotherUser">
+      {{ store.viewingUser }}'s Posts
+    </h1>
+    <h1 class="feed-title" v-else>Global Feed</h1>
+    <div v-if="posts.length == 0">No posts now.</div>
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="email">{{ post.userEmail }}</div>
       <div class="metadata">
         <div>{{ post.createdAt.toDate().toLocaleDateString() }}</div>
         <div class="time">{{ post.createdAt.toDate().toLocaleTimeString() }}</div>
-        </div>
-        <router-link :to="{ name: 'Poster', params: { id: post.id } }">
-      <button class="btn">Make Poster</button>
-    </router-link>
-        <hr>
+      </div>
+      <router-link :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
+        <button class="btn">Make Poster</button>
+      </router-link>
+      <button 
+      v-if="store.viewingUser == store.currentUser 
+      && store.isLoggedIn"
+      @click="deletePost(post.id)">Delete</button>
+      <hr />
       <div class="content">
         {{ post.content }}
       </div>

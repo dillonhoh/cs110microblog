@@ -33,7 +33,6 @@ const createUserInFirestore = async (user) => {
   })
 }
 
-
 const handleSubmit = () => {
   if (store.isLogin) {
     signInWithEmailAndPassword(auth, emailForm.value, password.value)
@@ -45,7 +44,6 @@ const handleSubmit = () => {
         store.followerCount = await getFollowerCount(user.uid)
         store.followingCount = await getFollowingCount(user.uid)
         store.postsCount = await getPostCount(user.uid)
-        
       })
       .catch((error) => {
         switch (error.code) {
@@ -114,8 +112,14 @@ const handleSubmit = () => {
         </div>
       </template>
       <template v-if="!store.isLoggedIn">
-        <input type="text" v-model="emailForm" placeholder="Email" id="email" class="inputs"/>
-        <input type="password" v-model="password" placeholder="Password" id="password" class="inputs"/>
+        <input type="text" v-model="emailForm" placeholder="Email" id="email" class="inputs" />
+        <input
+          type="password"
+          v-model="password"
+          placeholder="Password"
+          id="password"
+          class="inputs"
+        />
         <button type="button" @click="handleSubmit">
           {{ store.isLogin ? 'Log In' : 'Sign Up' }}
         </button>

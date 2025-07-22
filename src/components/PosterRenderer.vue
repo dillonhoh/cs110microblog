@@ -1,39 +1,54 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
+import { doc, getDoc } from 'firebase/firestore'
+import { firestore } from '../firebaseResources'
 
 const route = useRoute()
 
-// Get post data passed via route query or props
-const post = ref({
-  text: route.query.text || 'Example post text',
-  email: route.query.email || 'user@example.com',
-  date: route.query.date || new Date().toLocaleDateString(),
-})
+const post = ref(null)
+const loading = ref(true)
 
-// Poster themes
+watch(
+  () => route.params.id,
+  async (postId) => {
+    console.log('Route param id:', postId)
+    if (postId) {
+      try {
+        const userId = route.params.userId
+        const docRef = doc(firestore, 'users', userId, 'posts', postId)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          post.value = docSnap.data()
+        } else {
+          console.error('No such document!')
+        }
+      } catch (err) {
+        console.error('Error fetching post:', err)
+      } finally {
+        loading.value = false
+      }
+    }
+  },
+  { immediate: true },
+)
+
 const themes = [
   {
     name: 'classic',
     label: 'Classic',
-    bg: '/celebration.png',
-    font: 'Georgia, serif',
-    size: '32px'
+    bg: '/classic.svg',
   },
   {
-    name: 'modern',
-    label: 'Modern',
-    bg: '/celebration.png',
-    font: 'Arial, sans-serif',
-    size: '28px'
+    name: 'sunset',
+    label: 'Sunset',
+    bg: '/sunset.svg',
   },
   {
-    name: 'playful',
-    label: 'Playful',
-    bg: '/celebration.png',
-    font: '"Comic Sans MS", cursive',
-    size: '30px'
+    name: 'celebration',
+    label: 'Celebration',
+    bg: '/celebration.svg',
   },
 ]
 
@@ -54,12 +69,11 @@ async function downloadPoster() {
 </script>
 
 <template>
-  <div class="poster-editor">
-    <!-- Theme Selector -->
+  <div class="poster-editor" v-if="!loading">
     <div class="theme-options">
-      <button 
-        v-for="theme in themes" 
-        :key="theme.name" 
+      <button
+        v-for="theme in themes"
+        :key="theme.name"
         @click="selectTheme(theme)"
         :class="{ active: selectedTheme.name === theme.name }"
       >
@@ -67,23 +81,33 @@ async function downloadPoster() {
       </button>
     </div>
 
-    <!-- Poster Preview Area -->
-    <div id="poster" class="poster-area" :style="{ backgroundImage: `url(${selectedTheme.bg})` }">
-      
-      <p class="metauser">{{ post.email }}</p>
-      <p class="metadate">{{ post.date }}</p>
-      <p v-if="selectedTheme.name === 'classic'" class="filler">says...</p>
-      <h1 :style="{ fontFamily: selectedTheme.font, fontSize: selectedTheme.size } " class="content">
-        {{ post.text }}
+    <div
+      id="poster"
+      class="poster-area"
+      :class="`theme-${selectedTheme.name}`"
+      :style="{ backgroundImage: `url(${selectedTheme.bg})` }"
+    >
+      <p class="metauser">{{ post.userEmail }}</p>
+      <p class="metadate">{{ post.createdAt.toDate().toLocaleDateString() }}</p>
+      <h1 class="content">
+        {{ post.content }}
       </h1>
     </div>
 
-    <!-- Action -->
     <button @click="downloadPoster">Download Poster</button>
   </div>
 </template>
 
 <style scoped>
+/* buttons */
+.theme-options {
+  margin-bottom: 50px;
+}
+button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+/* actual poster */
 .poster-area {
   width: 600px;
   height: 800px;
@@ -97,29 +121,71 @@ async function downloadPoster() {
   display: flex;
   flex-direction: column;
 }
-.metauser {
-  margin-top: 20px;
-  font-size: 36px;
-  font-weight: 700;
-}
-.metadate {
-  margin-top: 20px;
-  font-size: 16px;
-}
-.filler {
-    font-size: 36px;
-  font-weight: 700;
-}
-.content{
-    align-self: center;
-    margin-top: 350px;
-    font-weight: 600;
-}
-.theme-options {
-  margin-bottom: 20px;
-}
-button.active {
-  font-weight: bold;
+.theme-classic .metauser {
+  font-family: 'Instrument Sans';
   text-decoration: underline;
+  font-size: 28px;
+}
+.theme-classic .metadate {
+  font-family: 'Instrument Sans';
+  font-size: 18px;
+}
+.theme-classic .content {
+  font-family: 'Martian Mono';
+  font-weight: 100;
+  font-size: 21px;
+  margin-top: 150px;
+}
+.theme-sunset .metauser {
+  margin-top: 65px;
+  font-family: 'Montserrat';
+  align-self: center;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+.theme-sunset .metadate {
+  margin-top: 17px;
+  font-family: 'Montserrat';
+  align-self: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+.theme-sunset .content {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-size: 21px;
+  text-align: left;
+  margin-top: 50px;
+  align-self: center;
+  max-width: 340px;
+}
+.theme-celebration .metauser {
+  margin-top: 250px;
+  font-family: 'Montserrat';
+  align-self: center;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+.theme-celebration .metadate {
+  margin-top: 17px;
+  font-family: 'Montserrat';
+  align-self: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+.theme-celebration .content {
+  font-family: 'Comic Sans MS';
+  font-weight: 700;
+  font-size: 40px;
+  text-align: left;
+  margin-top: 130px;
+  align-self: center;
+  max-width: 420px;
+}
+
+.content {
+  text-align: left;
 }
 </style>

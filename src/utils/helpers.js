@@ -1,8 +1,6 @@
-import { doc, getDoc, getDocs, collection } from "firebase/firestore"
-import { firestore } from "../firebaseResources"
-import { useUserStore } from "../stores/user"
-
-
+import { doc, getDoc, getDocs, collection } from 'firebase/firestore'
+import { firestore } from '../firebaseResources'
+import { useUserStore } from '../stores/user'
 
 export const getFollowerCount = async (id) => {
   try {
@@ -63,4 +61,3 @@ export const populateFollowing = async (uid) => {
     store.following = []
   }
 }
-

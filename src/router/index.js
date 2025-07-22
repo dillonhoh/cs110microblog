@@ -20,11 +20,11 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path: '/poster/:id',
+      path: '/poster/:userId/:id',
       name: 'Poster',
       component: () => import('@/views/PosterView.vue'),
-      props: true
-    }
+      props: true,
+    },
   ],
 })
 
