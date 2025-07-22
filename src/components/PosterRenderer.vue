@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const post = ref({
-  text: route.query.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  text: route.query.text || 'cheeseballs',
   email: route.query.email || 'dogmandoger@gmail.com',
   date: route.query.date || new Date().toLocaleDateString(),
 })
@@ -134,13 +134,28 @@ button.active {
   max-width: 340px;
 }
 .theme-celebration .metauser{
+  margin-top: 250px;
   font-family: 'Montserrat';
+  align-self: center;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
 }
 .theme-celebration .metadate{
+  margin-top: 17px;
   font-family: 'Montserrat';
+  align-self: center;
+  font-size: 20px;
+  font-weight: 600;
 }
 .theme-celebration .content{
   font-family: 'Comic Sans MS';
+  font-weight: 700;
+  font-size: 50px;
+  text-align: left;
+  margin-top: 140px;
+  align-self: center;
+  max-width: 340px;
 }
 
 .content{
