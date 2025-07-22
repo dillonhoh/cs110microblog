@@ -6,8 +6,8 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const post = ref({
-  text: route.query.text || 'Example post text',
-  email: route.query.email || 'user@example.com',
+  text: route.query.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  email: route.query.email || 'dogmandoger@gmail.com',
   date: route.query.date || new Date().toLocaleDateString(),
 })
 
@@ -16,22 +16,16 @@ const themes = [
     name: 'classic',
     label: 'Classic',
     bg: '/classic.svg',
-    font: 'Georgia, serif',
-    size: '32px'
   },
   {
     name: 'sunset',
     label: 'Sunset',
     bg: '/sunset.svg',
-    font: 'Arial, sans-serif',
-    size: '28px'
   },
   {
     name: 'celebration',
     label: 'Celebration',
-    bg: '/celebration.svg',
-    font: '"Comic Sans MS", cursive',
-    size: '30px'
+    bg: '/celebration.svg'
   },
 ]
 
@@ -64,11 +58,11 @@ async function downloadPoster() {
       </button>
     </div>
 
-    <div id="poster" class="poster-area" :style="{ backgroundImage: `url(${selectedTheme.bg})` }">
+    <div id="poster" class="poster-area" :class="`theme-${selectedTheme.name}`" :style="{ backgroundImage: `url(${selectedTheme.bg})` }">
       
       <p class="metauser">{{ post.email }}</p>
       <p class="metadate">{{ post.date }}</p>
-      <h1 :style="{ fontFamily: selectedTheme.font, fontSize: selectedTheme.size } " class="content">
+      <h1 class="content">
         {{ post.text }}
       </h1>
     </div>
@@ -78,6 +72,15 @@ async function downloadPoster() {
 </template>
 
 <style scoped>
+/* buttons */
+.theme-options {
+  margin-bottom: 50px;
+}
+button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+/* actual poster */
 .poster-area {
   width: 600px;
   height: 800px;
@@ -91,29 +94,56 @@ async function downloadPoster() {
   display: flex;
   flex-direction: column;
 }
-.metauser {
-  margin-top: 20px;
-  font-size: 36px;
-  font-weight: 700;
-}
-.metadate {
-  margin-top: 20px;
-  font-size: 16px;
-}
-.filler {
-    font-size: 36px;
-  font-weight: 700;
-}
-.content{
-    align-self: center;
-    margin-top: 350px;
-    font-weight: 600;
-}
-.theme-options {
-  margin-bottom: 20px;
-}
-button.active {
-  font-weight: bold;
+.theme-classic .metauser{
+  font-family: 'Instrument Sans';
   text-decoration: underline;
+  font-size: 28px;
+}
+.theme-classic .metadate{
+  font-family: 'Instrument Sans';
+  font-size: 18px;
+}
+.theme-classic .content{
+  font-family: 'Martian Mono';
+  font-weight: 100;
+  font-size: 21px;
+  margin-top: 150px;
+}
+.theme-sunset .metauser{
+  margin-top: 65px;
+  font-family: 'Montserrat';
+  align-self: center;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+.theme-sunset .metadate{
+  margin-top: 17px;
+  font-family: 'Montserrat';
+  align-self: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+.theme-sunset .content{
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-size: 21px;
+  text-align: left;
+  margin-top: 50px;
+  align-self: center;
+  max-width: 340px;
+}
+.theme-celebration .metauser{
+  font-family: 'Montserrat';
+}
+.theme-celebration .metadate{
+  font-family: 'Montserrat';
+}
+.theme-celebration .content{
+  font-family: 'Comic Sans MS';
+}
+
+.content{
+    text-align: left;
 }
 </style>
