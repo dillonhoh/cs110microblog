@@ -3,13 +3,12 @@
 nav a,
 .green {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: var(--color-dark);
   transition: 0.4s;
-  padding: 3px;
 }
 
 @media (hover: hover) {
   nav a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: hsla(2, 85%, 50%, 0.3);
   }
 }

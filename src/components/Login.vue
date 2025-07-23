@@ -104,10 +104,10 @@ const handleSubmit = () => {
       <template v-if="!store.isLoggedIn">
         <div class="option">
           <a :class="{ active: store.isLogin }" @click.prevent="store.toggleMode('login')"
-            >Log In</a
+            >LOG IN</a
           >
           <a :class="{ active: !store.isLogin }" @click.prevent="store.toggleMode('signup')"
-            >Sign Up</a
+            >SIGN UP</a
           >
         </div>
       </template>
@@ -121,7 +121,7 @@ const handleSubmit = () => {
           class="inputs"
         />
         <button type="button" @click="handleSubmit">
-          {{ store.isLogin ? 'Log In' : 'Sign Up' }}
+          {{ store.isLogin ? 'Log In' : 'Create' }}
         </button>
       </template>
       <template v-else>
@@ -139,7 +139,7 @@ const handleSubmit = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: lightblue;
+  border: 1px solid var(--color-primary);
   width: fit-content;
   margin: auto;
   padding: 0px 15px 15px 15px;
@@ -147,11 +147,13 @@ const handleSubmit = () => {
 .option {
   width: 175px;
   font-size: 16px;
-  color: black;
+  color: var(--color-primary);
   display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 20px;
+  justify-content: space-around;
+  margin-bottom: 18px;
   margin-top: 10px;
+  font-weight: 500;
+  letter-spacing: -1px;
 }
 a.active {
   text-decoration: underline;
@@ -163,6 +165,13 @@ form {
 }
 .inputs {
   margin-bottom: 15px;
+  border: 1px solid var(--color-primary);
+  color: var(--color-secondary);
+  font-family: Azeret Mono;
+}
+.inputs::placeholder{
+  color: var(--color-primary);
+  font-family: Azeret Mono;
 }
 .logout-button {
   margin-bottom: 0px;
@@ -171,9 +180,12 @@ h1 {
   font-size: 14px;
 }
 .error {
-  font-weight: 400;
-  color: lightcoral;
-  margin-bottom: 15px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-top: 15px;
+  text-align: center;
 }
 .user-email {
   text-align: center;
@@ -182,4 +194,22 @@ h1 {
   font-weight: 600;
   font-size: 18px;
 }
+
+button {
+  all: unset;
+  text-align: center;
+  background-color: var(--color-primary);
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  border-radius: 2px;
+}
+
+button:hover {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
 </style>

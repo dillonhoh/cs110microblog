@@ -23,15 +23,17 @@ watch(
 )
 </script>
 <template>
-  <div class="user-stats">
-    <h1 v-if="store.isViewingAnotherUser" class="user-email-stats">
+  
+    
+    <template v-if="store.isViewingAnotherUser || store.isLoggedIn">
+      <div class="user-stats">
+      <h1 v-if="store.isViewingAnotherUser" class="user-email-stats">
       {{ store.viewingUser }}
     </h1>
 
     <h1 v-else class="user-email-stats">
       {{ store.currentUser }}
     </h1>
-    <template v-if="store.isViewingAnotherUser || store.isLoggedIn">
       <div class="profile-stats">
         <div class="stat">
           <div>Posts</div>
@@ -46,26 +48,46 @@ watch(
           <div class="stat-number">{{ store.followerCount }}</div>
         </div>
       </div>
+      </div>
     </template>
-    <template v-else>
-      <RouterLink to="/login">Log In</RouterLink>
+    
+  
+  <template v-else >
+      <RouterLink to="/login" class="default">
+        Log In
+      </RouterLink>
     </template>
-  </div>
 </template>
 <style>
 .user-stats {
-  background-color: lightblue;
-  width: 300px;
+  border: 1px solid var(--color-primary);
   padding: 15px 0px 15px 0px;
-  height: 100px;
 }
 .user-email-stats {
-  font-size: 20px;
-  margin-left: 22px;
+  font-size: 25px;
+  margin: auto;
   font-weight: bold;
+  text-align: center;
 }
 .profile-stats {
   display: flex;
   justify-content: space-around;
+}
+.default{
+  display: block;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-decoration: none;
+  border: 1px solid var(--color-primary);
+  transition: all 0.3s ease;
+}
+.default:visited {
+  color: #E71F18;
+}
+
+.default:hover{
+  background-color: #E71F18; 
+  color: white;
 }
 </style>

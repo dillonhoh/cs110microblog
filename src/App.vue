@@ -14,18 +14,18 @@ const store = useUserStore()
           store.viewingUserId = '';
           store.viewingUser = ''
         "
-        >Home</RouterLink
+        >HOME</RouterLink
       >
-      <RouterLink to="/login" class="right-link">Log In</RouterLink>
+      <RouterLink to="/login" class="middle-link">{{ store.isLoggedIn ? 'LOG OUT' : 'LOG IN'}}</RouterLink>
       <router-link
-        class="my-posts"
+        class="right-link"
         @click="
           store.viewingUser = store.currentUser;
           store.viewingUserId = store.currentUserId
         "
         v-if="store.currentUserId"
         :to="{ name: 'userFeed', params: { id: store.currentUserId } }"
-        >My Posts</router-link
+        >MY POSTS</router-link
       >
     </nav>
   </header>
@@ -37,14 +37,15 @@ const store = useUserStore()
 nav {
   width: 100%;
   font-size: 18px;
-  margin-top: 10px;
-  margin-left: 10px;
+  margin-top: 18px;
+  margin-left: 13px;
+  text-align: center;
 }
 
 nav a.router-link-exact-active {
   color: var(--color-text);
 }
-.my-posts {
+.right-link {
   border-left: 1px solid var(--color-border);
 }
 
@@ -52,7 +53,10 @@ nav a {
   display: inline-block;
   padding: 0 1rem;
 }
+nav .middle-link {
+  border-left: 1px solid var(--color-primary-soft);
+}
 nav .right-link {
-  border-left: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-primary-soft);
 }
 </style>

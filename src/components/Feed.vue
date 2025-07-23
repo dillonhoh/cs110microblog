@@ -8,6 +8,7 @@ import { computed, watch, onMounted } from 'vue'
 import { limit } from 'firebase/firestore'
 import { orderBy } from 'firebase/firestore'
 import { doc, deleteDoc } from 'firebase/firestore'
+import 'primeicons/primeicons.css'
 
 
 const store = useUserStore()
@@ -73,21 +74,26 @@ const deletePost = async (postId) => {
 </script>
 <template>
   <div class="feed-container">
-    <h1 class="feed-title" v-if="store.viewingUser == store.currentUser">My Posts</h1>
+    <h1 class="feed-title" v-if="store.viewingUser === store.currentUser && store.isLoggedIn">MY POSTS</h1>
     <h1 class="feed-title" v-else-if="store.isViewingAnotherUser">
-      {{ store.viewingUser }}'s Posts
+      {{ store.viewingUser.split('@')[0].toUpperCase() }}'S POSTS
     </h1>
-    <h1 class="feed-title" v-else>Global Feed</h1>
+    <h1 class="feed-title" v-else>GLOBAL FEED</h1>
     <div v-if="posts.length == 0">No posts now.</div>
     <div v-for="post in posts" :key="post.id" class="post">
+      <div class="top-container">
       <div class="email">{{ post.userEmail }}</div>
+        <router-link :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
+          <i class="pi pi-arrow-right"></i>
+          <i class="pi pi-file"></i>
+        </router-link>
+      </div>
       <div class="metadata">
         <div>{{ post.createdAt.toDate().toLocaleDateString() }}</div>
         <div class="time">{{ post.createdAt.toDate().toLocaleTimeString() }}</div>
       </div>
-      <router-link :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
-        <button class="btn">Make Poster</button>
-      </router-link>
+      
+      
       <button 
       v-if="store.viewingUser == store.currentUser 
       && store.isLoggedIn"
@@ -101,31 +107,49 @@ const deletePost = async (postId) => {
 </template>
 <style>
 .feed-title {
-  font-weight: 600;
-  font-size: 25px;
-  padding-left: 15px;
+  font-weight: 700;
+  font-size: 35px;
   justify-self: center;
+  margin: 0px 0px 12px 0px;
 }
 .feed-container {
-  background-color: lightblue;
+  border: 1px solid var(--color-primary);
   width: 450px;
   padding: 25px 0px 0px 0px;
 }
 .post {
+  padding-top: 15px;
   padding-bottom: 20px;
   padding-left: 30px;
+  border-top: 1px solid var(--color-primary);
+
 }
 .email {
-  font-weight: 300;
+  font-weight: 600;
+}
+.top-container{
+  display: flex;
+  justify-content: space-between;
+  max-width: 450px;
+  margin-right: 30px;
 }
 .metadata {
   display: flex;
   justify-content: space-between;
+  font-size: 12px;
 }
 .time {
+  text-align: center;
   margin-right: 30px;
 }
 hr {
   margin-right: 30px;
+}
+.content {
+  font-weight: 300;
+  font-size: 17px;
+}
+.pi {
+  color: var(--color-primary);
 }
 </style>

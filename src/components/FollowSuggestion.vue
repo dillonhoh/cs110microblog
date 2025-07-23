@@ -104,7 +104,7 @@ const followUser = async (otherUserId) => {
 
 <template>
   <div class="suggestion-container">
-    <h1 class="suggestion-title">Suggested Following</h1>
+    <h1 class="suggestion-title">SUGGESTED</h1>
     <section v-if="suggestedEmails.length > 0" class="email-container">
       <ul>
         <li v-for="user in suggestedEmails" :key="user.uid">
@@ -128,20 +128,24 @@ ul {
   list-style-type: none;
 }
 .suggestion-title {
-  font-weight: 600;
-  font-size: 25px;
+  font-weight: 700;
+  font-size: 35px;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 12px 0px;
+  border-bottom: 1px solid var(--color-primary);
+  
 }
 .suggestion-container {
-  width: 300px;
-  background-color: lightblue;
+  border: 1px solid var(--color-primary);
   padding: 15px 0px 15px 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
+  margin: auto;
 }
 .email-container ul li {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 275px;
+  margin-right: 30px;
 }
 </style>
