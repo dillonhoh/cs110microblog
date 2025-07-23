@@ -74,6 +74,7 @@ async function downloadPoster() {
       <button
         v-for="theme in themes"
         :key="theme.name"
+        class="themebutton"
         @click="selectTheme(theme)"
         :class="{ active: selectedTheme.name === theme.name }"
       >
@@ -94,20 +95,50 @@ async function downloadPoster() {
       </h1>
     </div>
 
-    <button @click="downloadPoster">Download Poster</button>
+    <button @click="downloadPoster" class="download-poster">Download Poster</button>
   </div>
 </template>
 
 <style scoped>
 /* buttons */
+.poster-editor{
+  display: flex;
+  align-items: start;
+  
+  margin-top: 75px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+.download-poster {
+  padding: 8px 12px 8px 12px;
+}
 .theme-options {
   margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  width: 175px;
+  gap: 15px;
+}
+.themebutton {
+  color: var(--color-primary);
+  background-color: white;
+  border: 1px solid var(--color-primary);
+  padding: 0px 7px 0px 7px;
+  font-size: 20px;
+}
+.themebutton:hover {
+  background-color: var(--color-primary);
+  color: white;
 }
 button.active {
-  font-weight: bold;
-  text-decoration: underline;
+  background-color: var(--color-primary);
+  color: white;
 }
 /* actual poster */
+p{
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
 .poster-area {
   width: 600px;
   height: 800px;
@@ -125,18 +156,23 @@ button.active {
   font-family: 'Instrument Sans';
   text-decoration: underline;
   font-size: 28px;
+  color: black;
 }
 .theme-classic .metadate {
   font-family: 'Instrument Sans';
   font-size: 18px;
+  color: black;
 }
 .theme-classic .content {
   font-family: 'Martian Mono';
   font-weight: 100;
   font-size: 21px;
-  margin-top: 150px;
+  margin-top: 170px;
+  margin-left: 6px;
+  color: black;
 }
 .theme-sunset .metauser {
+  color: #64298e;
   margin-top: 65px;
   font-family: 'Montserrat';
   align-self: center;
@@ -145,22 +181,25 @@ button.active {
   text-align: center;
 }
 .theme-sunset .metadate {
-  margin-top: 17px;
+  color: #64298e;
+  margin-top: 30px;
   font-family: 'Montserrat';
   align-self: center;
   font-size: 20px;
   font-weight: 600;
 }
 .theme-sunset .content {
+  color: black;
   font-family: 'Open Sans';
   font-weight: 300;
   font-size: 21px;
-  text-align: left;
-  margin-top: 50px;
+  margin-top: 60px;
   align-self: center;
-  max-width: 340px;
+  max-width: 390px;
+  margin-left: 33px;
 }
 .theme-celebration .metauser {
+  color: black;
   margin-top: 250px;
   font-family: 'Montserrat';
   align-self: center;
@@ -169,6 +208,7 @@ button.active {
   text-align: center;
 }
 .theme-celebration .metadate {
+  color: black;
   margin-top: 17px;
   font-family: 'Montserrat';
   align-self: center;
@@ -176,11 +216,14 @@ button.active {
   font-weight: 600;
 }
 .theme-celebration .content {
+  color: black;
   font-family: 'Comic Sans MS';
   font-weight: 700;
-  font-size: 40px;
+  font-size: 50px;
   text-align: left;
   margin-top: 130px;
+  margin-left: 33px;
+
   align-self: center;
   max-width: 420px;
 }

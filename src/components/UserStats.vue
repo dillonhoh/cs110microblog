@@ -81,13 +81,15 @@ watch(
   text-decoration: none;
   border: 1px solid var(--color-primary);
   transition: all 0.3s ease;
+  background-color: var(--color-primary);
+  color: white;
 }
 .default:visited {
-  color: #E71F18;
+  color: white;
 }
 
 .default:hover{
-  background-color: #E71F18; 
+  background-color: var(--color-secondary); 
   color: white;
 }
 </style>

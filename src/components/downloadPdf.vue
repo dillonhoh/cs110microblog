@@ -110,5 +110,20 @@ const downloadPDF = async () => {
 
 
 <template>
-    <button @click="downloadPDF">Download</button>
+    <button class ="download" @click="downloadPDF">Download Profile Information</button>
 </template>
+
+<style>
+
+.download {
+    background-color: var(--color-primary);
+    color: white;
+    border: 1px solid var(--color-primary);
+    border-top: none;
+    width: 345px;
+    padding: 5px 0px 5px 0px 
+}
+.download:hover{
+    background-color: var(--color-secondary);
+}
+</style>

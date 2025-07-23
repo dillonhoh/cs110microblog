@@ -43,7 +43,7 @@ const handleSubmit = async () => {
 <style>
 .create-container {
   border: 1px solid var(--color-primary);
-  padding: 20px 40px 20px 40px;
+  padding: 0px 40px 20px 40px;
   display: flex;
   flex-direction: column;
 }
@@ -60,7 +60,7 @@ const handleSubmit = async () => {
   resize: none;
   border: 1px solid var(--color-primary);
   color: var(--color-secondary);
-  width: 200px;
+  width: 240px;
 }
 .input-content::placeholder {
   color: var(--color-primary);

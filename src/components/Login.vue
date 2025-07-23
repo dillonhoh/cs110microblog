@@ -152,7 +152,7 @@ const handleSubmit = () => {
   justify-content: space-around;
   margin-bottom: 18px;
   margin-top: 10px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -1px;
 }
 a.active {

@@ -79,7 +79,7 @@ const deletePost = async (postId) => {
       {{ store.viewingUser.split('@')[0].toUpperCase() }}'S POSTS
     </h1>
     <h1 class="feed-title" v-else>GLOBAL FEED</h1>
-    <div v-if="posts.length == 0">No posts now.</div>
+    <div v-if="posts.length == 0" class="noposts">No posts now.</div>
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="top-container">
       <div class="email">{{ post.userEmail }}</div>
@@ -92,16 +92,14 @@ const deletePost = async (postId) => {
         <div>{{ post.createdAt.toDate().toLocaleDateString() }}</div>
         <div class="time">{{ post.createdAt.toDate().toLocaleTimeString() }}</div>
       </div>
-      
-      
-      <button 
-      v-if="store.viewingUser == store.currentUser 
-      && store.isLoggedIn"
-      @click="deletePost(post.id)">Delete</button>
       <hr />
       <div class="content">
         {{ post.content }}
       </div>
+      <i class="pi pi-trash"
+      v-if="store.viewingUser == store.currentUser 
+      && store.isLoggedIn"
+      @click="deletePost(post.id)"></i>
     </div>
   </div>
 </template>
@@ -110,12 +108,15 @@ const deletePost = async (postId) => {
   font-weight: 700;
   font-size: 35px;
   justify-self: center;
-  margin: 0px 0px 12px 0px;
+  margin: 0px 0px 15px 0px;
 }
 .feed-container {
   border: 1px solid var(--color-primary);
   width: 450px;
   padding: 25px 0px 0px 0px;
+}
+.noposts {
+  margin: 0px 0px 15px 30px
 }
 .post {
   padding-top: 15px;
@@ -144,12 +145,26 @@ const deletePost = async (postId) => {
 }
 hr {
   margin-right: 30px;
+  border: none;
+  border-top: 1px solid #A9A9A9;
 }
 .content {
   font-weight: 300;
   font-size: 17px;
+  padding-right: 30px;
 }
 .pi {
   color: var(--color-primary);
+}
+.pi:hover{
+  color: var(--color-primary);
+}
+.pi-trash {
+  display: flex;
+  justify-content: end;
+  margin-right: 30px;
+}
+.pi-trash:hover {
+  cursor: pointer;
 }
 </style>

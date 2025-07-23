@@ -116,7 +116,7 @@ const followUser = async (otherUserId) => {
             "
             >{{ user.email }}</router-link
           >
-          <button @click="followUser(user.uid)" v-if="store.isLoggedIn">Follow</button>
+          <button class="follow" @click="followUser(user.uid)" v-if="store.isLoggedIn">Follow</button>
         </li>
       </ul>
     </section>
@@ -130,14 +130,14 @@ ul {
 .suggestion-title {
   font-weight: 700;
   font-size: 35px;
-  margin: 0px 0px 0px 0px;
+  margin: 0px 0px 20px 0px;
   padding: 0px 0px 12px 0px;
   border-bottom: 1px solid var(--color-primary);
   
 }
 .suggestion-container {
   border: 1px solid var(--color-primary);
-  padding: 15px 0px 15px 0px;
+  padding: 15px 0px 10px 0px;
   text-align: center;
   margin: auto;
 }
@@ -147,5 +147,21 @@ ul {
   align-items: center;
   width: 275px;
   margin-right: 30px;
+  margin-bottom: 12px;
 }
+.email-container ul li a {
+  color: #002F63;
+}
+.email-container ul li a:visited {
+  color: #002F63;
+}
+.email-container ul li a:hover {
+  color:rgb(33, 108, 193);
+}
+
+.follow {
+  font-size: 12px;
+  padding: 1px 3px 1px 3px;
+}
+
 </style>

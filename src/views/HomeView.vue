@@ -16,8 +16,9 @@ const store = useUserStore()
   <main>
     <div class="left">
       <UserStats />
-      <FollowSuggestion class="followsugg" />
       <DownloadPdf v-if="store.isViewingAnotherUser"/>
+      <FollowSuggestion class="followsugg" />
+      
     </div>
 
     <div class="right">
