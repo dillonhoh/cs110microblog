@@ -58,15 +58,11 @@ const downloadPDF = async () => {
   let y = 10
 
   pdf.setFontSize(16)
-  pdf.text(`User Snapshot: ${userData.displayName || userData.email}`, 10, y)
+  pdf.text(`User's Profile: ${userData.displayName || userData.email}`, 10, y)
   y += 10
 
   pdf.setFontSize(10)
   pdf.text(`Downloaded: ${new Date().toLocaleString()}`, 10, y)
-  y += 10
-
-  pdf.setFontSize(12)
-  pdf.text(`Email: ${userData.email}`, 10, y)
   y += 10
 
   const writeList = (title, items) => {
