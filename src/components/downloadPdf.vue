@@ -121,8 +121,10 @@ const downloadPDF = async () => {
     color: white;
     border: 1px solid var(--color-primary);
     border-top: none;
-    width: 345px;
-    padding: 5px 0px 5px 0px 
+    font-family: Azeret Mono;
+    width: 347px;
+    padding: 5px 0px 5px 0px; 
+    transition: all 0.3s ease;
 }
 .download:hover{
     background-color: var(--color-secondary);
