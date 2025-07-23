@@ -21,6 +21,7 @@ watch(
     store.postsCount = await getPostCount(displayId.value)
   },
 )
+
 </script>
 <template>
   

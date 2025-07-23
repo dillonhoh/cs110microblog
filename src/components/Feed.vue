@@ -84,7 +84,10 @@ const deletePost = async (postId) => {
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="top-container">
       <div class="email">{{ post.userEmail }}</div>
-        <router-link :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
+        <router-link 
+        @click="store.viewingUser = '';
+              store.viewingUserId = ''"
+        :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
           <i class="pi pi-arrow-right"></i>
           <i class="pi pi-file"></i>
         </router-link>
