@@ -85,6 +85,7 @@ const deletePost = async (postId) => {
       <div class="top-container">
       <div class="email">{{ post.userEmail }}</div>
         <router-link 
+        class="icons"
         @click="store.viewingUser = '';
               store.viewingUserId = ''"
         :to="{ name: 'Poster', params: { userId: post.userId, id: post.id } }">
@@ -100,10 +101,12 @@ const deletePost = async (postId) => {
       <div class="content">
         {{ post.content }}
       </div>
+      <div class="trash">
       <i class="pi pi-trash"
       v-if="store.viewingUser == store.currentUser 
       && store.isLoggedIn"
       @click="deletePost(post.id)"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -162,13 +165,28 @@ hr {
 }
 .pi:hover{
   color: var(--color-primary);
+  
 }
-.pi-trash {
+.icons {
+  transition: all 0.3s ease;
+}
+.icons:hover {
+  transform: scale(1.25)
+}
+.trash {
   display: flex;
   justify-content: end;
   margin-right: 30px;
+  
+  
+}
+.pi-trash {
+  transition: all 0.3s ease;
+  transform-origin: center;
 }
 .pi-trash:hover {
   cursor: pointer;
+  transform: scale(1.25)
 }
+
 </style>
