@@ -67,6 +67,7 @@ const deletePost = async (postId) => {
     const postRef = doc(firestore, 'users', store.currentUserId, 'posts', postId)
     await deleteDoc(postRef)
     await getPosts() // refresh post list after deletion
+    store.triggerPostUpdate()
   } catch (error) {
     console.error('Failed to delete post:', error)
   }

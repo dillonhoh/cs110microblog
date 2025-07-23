@@ -192,7 +192,7 @@ p{
   color: black;
   font-family: 'Open Sans';
   font-weight: 300;
-  font-size: 21px;
+  font-size: 24px;
   margin-top: 60px;
   align-self: center;
   max-width: 390px;
