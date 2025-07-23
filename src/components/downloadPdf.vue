@@ -5,10 +5,11 @@ import { useUserStore } from '@/stores/user'
 import { firestore } from '@/firebaseResources'
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import jsPDF from 'jspdf'
+import { computed } from 'vue'
 
 const store = useUserStore()
 const route = useRoute()
-const userId = ref(store.viewingUserId)
+const userId = computed(() => store.viewingUserId)
 
 const downloadPDF = async () => {
   const userRef = doc(firestore, 'users', userId.value)
